@@ -231,8 +231,8 @@ export default function App() {
                 <div className="flex h-full flex-col items-start justify-center">
                   {/* Avatar with glow */}
                   <div className="relative">
-                    <div className="absolute inset-0 rounded-full blur-xl opacity-60 bg-gradient-to-br from-[#3B82F6] to-[#A855F7]" />
-                    <div className="relative flex h-16 w-16 items-center justify-center rounded-full text-white bg-gradient-to-br from-[#3B82F6] to-[#A855F7] shadow-inner">
+                    <div className="absolute inset-0 rounded-full blur-xl opacity-60 bg-linear-to-br from-[#3B82F6] to-[#A855F7]" />
+                    <div className="relative flex h-16 w-16 items-center justify-center rounded-full text-white bg-linear-to-br from-[#3B82F6] to-[#A855F7] shadow-inner">
                       <span className="text-xl font-semibold">P</span>
                     </div>
                   </div>
