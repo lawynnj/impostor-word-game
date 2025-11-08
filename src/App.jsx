@@ -17,16 +17,37 @@ const ROLES = {
 
 // --- Built-in word pairs (randomized at Start Game) -------------------------
 const WORD_PAIRS = [
-  { secret: "Pizza", hint: "Food" },
-  { secret: "Pineapple", hint: "Fruit" },
-  { secret: "Canada", hint: "Country" },
-  { secret: "Basketball", hint: "Sport" },
-  { secret: "Elephant", hint: "Animal" },
-  { secret: "Laptop", hint: "Electronics" },
-  { secret: "Avatar", hint: "Movie" },
-  { secret: "Twitter", hint: "App" },
-  { secret: "Tesla", hint: "Car" },
-  { secret: "Volcano", hint: "Nature" },
+  // Food
+  { secret: "Pizza", hint: "Food", category: "food" },
+  { secret: "Pineapple", hint: "Fruit", category: "food" },
+  { secret: "Sushi", hint: "Japanese dish", category: "food" },
+  { secret: "Chocolate", hint: "Sweet treat", category: "food" },
+  // Location
+  { secret: "Canada", hint: "Country", category: "location" },
+  { secret: "Volcano", hint: "Natural feature", category: "location" },
+  { secret: "Paris", hint: "City", category: "location" },
+  { secret: "Tokyo", hint: "Capital city", category: "location" },
+  // Sports
+  { secret: "Basketball", hint: "Sport", category: "sports" },
+  { secret: "Soccer", hint: "Team sport", category: "sports" },
+  { secret: "Tennis", hint: "Racket sport", category: "sports" },
+  { secret: "Swimming", hint: "Water sport", category: "sports" },
+  // Animals
+  { secret: "Elephant", hint: "Animal", category: "animals" },
+  { secret: "Lion", hint: "Big cat", category: "animals" },
+  { secret: "Dolphin", hint: "Marine mammal", category: "animals" },
+  { secret: "Penguin", hint: "Bird", category: "animals" },
+  // Object
+  { secret: "Laptop", hint: "Electronics", category: "object" },
+  { secret: "Twitter", hint: "App", category: "object" },
+  { secret: "Tesla", hint: "Car", category: "object" },
+  { secret: "Watch", hint: "Timepiece", category: "object" },
+  { secret: "Camera", hint: "Photography device", category: "object" },
+  // Movies
+  { secret: "Avatar", hint: "Movie", category: "movies" },
+  { secret: "Titanic", hint: "Film", category: "movies" },
+  { secret: "Inception", hint: "Sci-fi film", category: "movies" },
+  { secret: "Frozen", hint: "Animated film", category: "movies" },
 ];
 
 // --- Helper UI --------------------------------------------------------------
@@ -179,13 +200,15 @@ export default function App() {
   // Config
   const MIN = 3;
   const MAX = 12;
-  const [playerCount, setPlayerCount] = useState(6);
+  const [playerCount, setPlayerCount] = useState(3);
+  const [displayCategory, setDisplayCategory] = useState(false);
 
   // Core state
   const [players, setPlayers] = useState([]); // { index, role, revealed }
   const [impostorIndex, setImpostorIndex] = useState(null);
   const [secretWord, setSecretWord] = useState("");
   const [impostorHint, setImpostorHint] = useState("");
+  const [category, setCategory] = useState("");
 
   // Flow state
   const [activePlayerIndex, setActivePlayerIndex] = useState(null);
@@ -222,6 +245,7 @@ export default function App() {
     const pair = WORD_PAIRS[Math.floor(Math.random() * WORD_PAIRS.length)];
     setSecretWord(pair.secret);
     setImpostorHint(pair.hint);
+    setCategory(pair.category);
 
     const arr = Array.from({ length: playerCount }, (_, i) => ({
       index: i + 1,
@@ -297,6 +321,22 @@ export default function App() {
         />
         <span className="text-[#B3B3C0]">
           min {MIN}, max {MAX}
+        </span>
+      </div>
+
+      <div className="flex items-center gap-3 mt-5">
+        <label htmlFor="displayCategory" className="font-medium">
+          Display category?
+        </label>
+        <input
+          id="displayCategory"
+          type="checkbox"
+          checked={displayCategory}
+          onChange={(e) => setDisplayCategory(e.target.checked)}
+          className="w-5 h-5 rounded border-white/20 bg-white/10 text-[#A855F7] focus:ring-2 focus:ring-white/30 cursor-pointer"
+        />
+        <span className="text-[#B3B3C0] text-sm">
+          Show category in reveal screen
         </span>
       </div>
 
@@ -389,12 +429,17 @@ export default function App() {
     return (
       <Card className="text-center">
         <div className="text-center">
-          <h1 className="text-lg sm:text-xl">
+          <h1 className="text-sm sm:text-base">
             <span className="text-[#B3B3C0]">The word for </span>
             <span className="text-[#A855F7] font-semibold">
               Player {p.index}
             </span>
           </h1>
+          {displayCategory && category && (
+            <SectionTitle>
+              Category: <span className="capitalize">{category}</span>
+            </SectionTitle>
+          )}
         </div>
 
         <div
