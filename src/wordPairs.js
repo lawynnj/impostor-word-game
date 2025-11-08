@@ -112,9 +112,24 @@ export const WORD_PAIRS = [
   { secret: "Wallet", hint: "Money holder", category: "object" },
   { secret: "Headphones", hint: "Audio device", category: "object" },
 
-  // Movies (keeping existing items)
+  // Movies (19 items)
   { secret: "Avatar", hint: "Movie", category: "movies" },
   { secret: "Titanic", hint: "Film", category: "movies" },
   { secret: "Inception", hint: "Sci-fi film", category: "movies" },
   { secret: "Frozen", hint: "Animated film", category: "movies" },
+  { secret: "Star Wars", hint: "Space saga", category: "movies" },
+  { secret: "Harry Potter", hint: "Fantasy film", category: "movies" },
+  { secret: "The Matrix", hint: "Sci-fi action", category: "movies" },
+  { secret: "Jurassic Park", hint: "Dinosaur film", category: "movies" },
+  { secret: "Toy Story", hint: "Animated film", category: "movies" },
+  { secret: "The Lion King", hint: "Disney film", category: "movies" },
+  { secret: "Spider-Man", hint: "Superhero film", category: "movies" },
+  { secret: "Batman", hint: "Superhero film", category: "movies" },
+  { secret: "Finding Nemo", hint: "Animated film", category: "movies" },
+  { secret: "Shrek", hint: "Animated comedy", category: "movies" },
+  { secret: "The Avengers", hint: "Superhero film", category: "movies" },
+  { secret: "Jaws", hint: "Thriller film", category: "movies" },
+  { secret: "E.T.", hint: "Sci-fi film", category: "movies" },
+  { secret: "Forrest Gump", hint: "Drama film", category: "movies" },
+  { secret: "The Godfather", hint: "Crime film", category: "movies" },
 ];
