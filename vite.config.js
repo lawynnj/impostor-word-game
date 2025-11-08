@@ -4,7 +4,9 @@ import tailwindcss from "@tailwindcss/vite";
 import { VitePWA } from "vite-plugin-pwa";
 
 // Get base path for GitHub Pages
-const basePath = process.env.VITE_BASE_PATH || (process.env.NODE_ENV === 'production' ? '/impostor-word-game/' : '/');
+const basePath =
+  process.env.VITE_BASE_PATH ||
+  (process.env.NODE_ENV === "production" ? "/impostor-word-game/" : "/");
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -23,17 +25,22 @@ export default defineConfig({
         display: "standalone",
         icons: [
           {
-            src: `${basePath}pwa-192x192.png`,
+            src: `${basePath.replace(/\/$/, "")}/pwa-180x180.png`,
+            sizes: "180x180",
+            type: "image/png",
+          },
+          {
+            src: `${basePath.replace(/\/$/, "")}/pwa-192x192.png`,
             sizes: "192x192",
             type: "image/png",
           },
           {
-            src: `${basePath}pwa-512x512.png`,
+            src: `${basePath.replace(/\/$/, "")}/pwa-512x512.png`,
             sizes: "512x512",
             type: "image/png",
           },
           {
-            src: `${basePath}pwa-512x512.png`,
+            src: `${basePath.replace(/\/$/, "")}/pwa-512x512.png`,
             sizes: "512x512",
             type: "image/png",
             purpose: "any maskable",

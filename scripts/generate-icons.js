@@ -1,6 +1,6 @@
-import sharp from 'sharp';
-import { writeFileSync } from 'fs';
-import { join } from 'path';
+import sharp from "sharp";
+import { writeFileSync } from "fs";
+import { join } from "path";
 
 // Create a simple icon with text "I!" for Impostor
 const createIcon = async (size, outputPath) => {
@@ -20,21 +20,19 @@ const createIcon = async (size, outputPath) => {
     </svg>
   `;
 
-  await sharp(Buffer.from(svg))
-    .png()
-    .toFile(outputPath);
-  
+  await sharp(Buffer.from(svg)).png().toFile(outputPath);
+
   console.log(`Generated ${outputPath}`);
 };
 
 const generateIcons = async () => {
-  const publicDir = join(process.cwd(), 'public');
-  
-  await createIcon(192, join(publicDir, 'pwa-192x192.png'));
-  await createIcon(512, join(publicDir, 'pwa-512x512.png'));
-  
-  console.log('All icons generated successfully!');
+  const publicDir = join(process.cwd(), "public");
+
+  await createIcon(180, join(publicDir, "pwa-180x180.png"));
+  await createIcon(192, join(publicDir, "pwa-192x192.png"));
+  await createIcon(512, join(publicDir, "pwa-512x512.png"));
+
+  console.log("All icons generated successfully!");
 };
 
 generateIcons().catch(console.error);
-
