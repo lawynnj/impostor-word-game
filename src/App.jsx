@@ -567,8 +567,10 @@ export default function App() {
         </div>
 
         {/* Player Count Display and Controls */}
-        <div className="mt-8 flex flex-col items-center">
-          <div className="text-white/60 text-sm mb-4">How many players?</div>
+        <div className="mt-8 flex flex-col items-center border border-white/10 rounded-2xl p-6">
+          <div className="text-white/60 text-[12px] mb-4">
+            How many players?
+          </div>
           <div className="text-white text-7xl font-bold mb-8">
             {playerCount}
           </div>
@@ -644,7 +646,7 @@ export default function App() {
         </div>
 
         {/* Impostor Count Display and Controls */}
-        <div className="mt-8 flex flex-col items-center">
+        <div className="mt-8 flex flex-col items-center border border-white/10 rounded-2xl p-6">
           <div className="text-white/60 text-sm mb-4">How many imposters?</div>
           <div className="text-white text-7xl font-bold mb-8">
             {impostorCount}
@@ -706,11 +708,12 @@ export default function App() {
     return (
       <div className="max-w-2xl mx-auto">
         {/* Player and Impostor Count Cards */}
+        <h1 className="text-3xl font-semibold mb-6">Game Settings</h1>
         <div className="grid grid-cols-2 gap-4 mb-6">
           {/* Player Count Card */}
           <button
             onClick={() => setStage(STAGES.PLAYER_COUNT_SELECTION)}
-            className="bg-[#2A2540] rounded-2xl p-6 flex flex-col items-center text-center hover:bg-[#332B4A] transition-colors"
+            className="bg-[#0B0C24] rounded-2xl p-6 flex flex-col items-center text-center hover:bg-[#332B4A] transition-colors border-2 border-purple-500/10"
           >
             {/* Icon Container */}
             <div className="bg-[#1A1528] rounded-xl p-3 mb-4">
@@ -724,15 +727,18 @@ export default function App() {
               </svg>
             </div>
             {/* Question Text */}
-            <div className="text-white text-sm mb-3">How many players?</div>
+
+            <div className="text-white/60 text-[12px] mb-4">
+              How many players?
+            </div>
             {/* Large Number */}
-            <div className="text-white text-5xl font-bold">{playerCount}</div>
+            <div className="text-white text-3xl font-bold">{playerCount}</div>
           </button>
 
           {/* Impostor Count Card */}
           <button
             onClick={() => setStage(STAGES.IMPOSTOR_COUNT_SELECTION)}
-            className="bg-[#2A2540] rounded-2xl p-6 flex flex-col items-center text-center hover:bg-[#332B4A] transition-colors"
+            className="bg-[#0B0C24] rounded-2xl p-6 flex flex-col items-center text-center hover:bg-[#332B4A] transition-colors border-2 border-purple-500/10"
           >
             {/* Icon Container */}
             <div className="bg-[#1A1528] rounded-xl p-3 mb-4">
@@ -751,12 +757,12 @@ export default function App() {
               </svg>
             </div>
             {/* Question Text */}
-            <div className="text-white text-sm mb-3">How many imposters?</div>
+
+            <div className="text-white/60 text-[12px]">How many imposters?</div>
             {/* Large Number */}
-            <div className="text-white text-5xl font-bold">{impostorCount}</div>
+            <div className="text-white text-3xl font-bold">{impostorCount}</div>
           </button>
         </div>
-
         {/* Categories Section */}
         <div className="mb-6">
           <div className="flex items-center gap-2 mb-3">
@@ -790,7 +796,6 @@ export default function App() {
             </svg>
           </button>
         </div>
-
         {/* Toggle Settings */}
         <div className="mb-6 space-y-4">
           <div className="flex items-center justify-between">
@@ -840,7 +845,6 @@ export default function App() {
             </button>
           </div>
         </div>
-
         {/* Start Game Button */}
         <button
           onClick={startGame}
