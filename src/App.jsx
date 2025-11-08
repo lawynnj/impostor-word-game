@@ -5,6 +5,7 @@ import "./App.css";
 const STAGES = {
   CONFIG: "CONFIG",
   CATEGORY_SELECTION: "CATEGORY_SELECTION",
+  PLAYER_COUNT_SELECTION: "PLAYER_COUNT_SELECTION",
   PLAYERS: "PLAYERS",
   REVEAL: "REVEAL",
   VOTING: "VOTING",
@@ -344,6 +345,21 @@ export default function App() {
     });
   };
 
+  const handleBackToConfig = () => {
+    // If no categories are enabled, reset to all categories
+    if (enabledCategories.size === 0) {
+      setEnabledCategories(new Set(getAllCategories()));
+    }
+    setStage(STAGES.CONFIG);
+  };
+
+  const handlePlayerCountChange = (delta) => {
+    const newCount = playerCount + delta;
+    if (newCount >= MIN && newCount <= MAX) {
+      setPlayerCount(newCount);
+    }
+  };
+
   // --- Screens --------------------------------------------------------------
   const renderCategorySelection = () => {
     const allCategories = getAllCategories();
@@ -353,7 +369,7 @@ export default function App() {
         {/* Header with back button */}
         <div className="flex items-center gap-2 mb-2">
           <button
-            onClick={() => setStage(STAGES.CONFIG)}
+            onClick={handleBackToConfig}
             aria-label="Back"
             className="-ml-1 inline-flex h-10 w-10 items-center justify-center rounded-full text-white/80 hover:text-white ring-1 ring-white/10"
           >
@@ -409,94 +425,220 @@ export default function App() {
     );
   };
 
-  const renderConfig = () => (
-    <Card>
-      <SectionTitle>Game Settings</SectionTitle>
-      <div className="mt-1" />
-      <SubText>
-        Set the number of players and start a local pass-and-play round.
-      </SubText>
+  const renderPlayerCountSelection = () => {
+    return (
+      <div className="max-w-2xl mx-auto">
+        {/* Header with back button */}
+        <div className="flex items-center gap-2 mb-2">
+          <button
+            onClick={() => setStage(STAGES.CONFIG)}
+            aria-label="Back"
+            className="-ml-1 inline-flex h-10 w-10 items-center justify-center rounded-full text-white/80 hover:text-white ring-1 ring-white/10"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              className="h-5 w-5"
+            >
+              <path
+                fillRule="evenodd"
+                d="M10.03 3.97a.75.75 0 0 1 0 1.06L4.81 10.25H21a.75.75 0 0 1 0 1.5H4.81l5.22 5.22a.75.75 0 1 1-1.06 1.06l-6.5-6.5a.75.75 0 0 1 0-1.06l6.5-6.5a.75.75 0 0 1 1.06 0Z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </button>
+          <h1 className="text-3xl font-semibold">Players</h1>
+        </div>
 
-      <div className="flex items-center gap-3 mt-5">
-        <label htmlFor="playerCount" className="font-medium">
-          Players
-        </label>
-        <input
-          id="playerCount"
-          type="number"
-          min={MIN}
-          max={MAX}
-          value={playerCount}
-          onChange={(e) => setPlayerCount(Number(e.target.value))}
-          className="w-24 rounded-xl border border-white/20 bg-white/10 px-3 py-2 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/30"
-        />
-        <span className="text-[#B3B3C0]">
-          min {MIN}, max {MAX}
-        </span>
+        {/* Player Count Display and Controls */}
+        <div className="mt-8 flex flex-col items-center">
+          <div className="text-white/60 text-sm mb-4">How many players?</div>
+          <div className="text-white text-7xl font-bold mb-8">
+            {playerCount}
+          </div>
+
+          <div className="flex items-center gap-6">
+            <button
+              onClick={() => handlePlayerCountChange(-1)}
+              disabled={playerCount <= MIN}
+              className="w-14 h-14 rounded-full bg-[#2A2540] text-white flex items-center justify-center hover:bg-[#332B4A] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="h-6 w-6"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M3.75 12a.75.75 0 0 1 .75-.75h15a.75.75 0 0 1 0 1.5h-15a.75.75 0 0 1-.75-.75Z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </button>
+            <button
+              onClick={() => handlePlayerCountChange(1)}
+              disabled={playerCount >= MAX}
+              className="w-14 h-14 rounded-full bg-[#2A2540] text-white flex items-center justify-center hover:bg-[#332B4A] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="h-6 w-6"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
       </div>
-      <div className="flex items-center gap-3 mt-5">
-        <label htmlFor="displayCategory" className="font-medium">
-          Display category
-        </label>
+    );
+  };
+
+  const renderConfig = () => {
+    const allCategories = getAllCategories();
+    const isAllCategoriesSelected =
+      enabledCategories.size === allCategories.length;
+    const categoryDisplayText = isAllCategoriesSelected
+      ? "All Categories"
+      : Array.from(enabledCategories)
+          .map((cat) => CATEGORY_DISPLAY_NAMES[cat])
+          .join(", ");
+
+    return (
+      <div className="max-w-2xl mx-auto">
+        {/* Players Section */}
+        <div className="mb-6">
+          <div className="flex items-center gap-2 mb-3">
+            <label className="font-medium text-white">Players</label>
+          </div>
+          <button
+            onClick={() => setStage(STAGES.PLAYER_COUNT_SELECTION)}
+            className="w-full bg-[#2A2540] rounded-xl p-4 flex items-center justify-between hover:bg-[#332B4A] transition-colors"
+          >
+            <div className="text-left">
+              <div className="text-white font-medium">
+                {playerCount} Players
+              </div>
+              <div className="text-white/60 text-sm mt-1">
+                min {MIN}, max {MAX}
+              </div>
+            </div>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              className="h-5 w-5 text-white"
+            >
+              <path
+                fillRule="evenodd"
+                d="M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </button>
+        </div>
+
+        {/* Categories Section */}
+        <div className="mb-6">
+          <div className="flex items-center gap-2 mb-3">
+            <label className="font-medium text-white">Categories</label>
+          </div>
+          <button
+            onClick={() => setStage(STAGES.CATEGORY_SELECTION)}
+            className="w-full bg-[#2A2540] rounded-xl p-4 flex items-center justify-between hover:bg-[#332B4A] transition-colors"
+          >
+            <div className="text-left">
+              <div className="text-white font-medium">
+                {categoryDisplayText}
+              </div>
+              {isAllCategoriesSelected && (
+                <div className="text-white/60 text-sm mt-1">
+                  {allCategories.length} categories enabled
+                </div>
+              )}
+            </div>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              className="h-5 w-5 text-white"
+            >
+              <path
+                fillRule="evenodd"
+                d="M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </button>
+        </div>
+
+        {/* Toggle Settings */}
+        <div className="mb-6 space-y-4">
+          <div className="flex items-center justify-between">
+            <label htmlFor="displayCategory" className="font-medium text-white">
+              Show Category to Imposter
+            </label>
+            <button
+              id="displayCategory"
+              type="button"
+              role="switch"
+              aria-checked={displayCategory}
+              onClick={() => setDisplayCategory(!displayCategory)}
+              className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-white/30 focus:ring-offset-2 focus:ring-offset-[#0B0C24] ${
+                displayCategory ? "bg-[#A855F7]" : "bg-white/20"
+              }`}
+            >
+              <span
+                className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out ${
+                  displayCategory ? "translate-x-5" : "translate-x-0"
+                }`}
+              />
+            </button>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <label
+              htmlFor="displayImpostorHint"
+              className="font-medium text-white"
+            >
+              Show Hint to Imposter
+            </label>
+            <button
+              id="displayImpostorHint"
+              type="button"
+              role="switch"
+              aria-checked={displayImpostorHint}
+              onClick={() => setDisplayImpostorHint(!displayImpostorHint)}
+              className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-white/30 focus:ring-offset-2 focus:ring-offset-[#0B0C24] ${
+                displayImpostorHint ? "bg-[#A855F7]" : "bg-white/20"
+              }`}
+            >
+              <span
+                className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out ${
+                  displayImpostorHint ? "translate-x-5" : "translate-x-0"
+                }`}
+              />
+            </button>
+          </div>
+        </div>
+
+        {/* Start Game Button */}
         <button
-          id="displayCategory"
-          type="button"
-          role="switch"
-          aria-checked={displayCategory}
-          onClick={() => setDisplayCategory(!displayCategory)}
-          className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-white/30 focus:ring-offset-2 focus:ring-offset-[#0B0C24] ${
-            displayCategory ? "bg-[#A855F7]" : "bg-white/20"
-          }`}
+          onClick={startGame}
+          className="w-full bg-linear-to-r from-[#9333EA] to-[#A855F7] rounded-xl py-4 px-6 text-white font-medium hover:opacity-90 active:scale-[.99] transition-all"
         >
-          <span
-            className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out ${
-              displayCategory ? "translate-x-5" : "translate-x-0"
-            }`}
-          />
+          Start Game
         </button>
       </div>
-      <div className="flex items-center gap-3 mt-5">
-        <label htmlFor="displayImpostorHint" className="font-medium">
-          Display hint to impostor
-        </label>
-        <button
-          id="displayImpostorHint"
-          type="button"
-          role="switch"
-          aria-checked={displayImpostorHint}
-          onClick={() => setDisplayImpostorHint(!displayImpostorHint)}
-          className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-white/30 focus:ring-offset-2 focus:ring-offset-[#0B0C24] ${
-            displayImpostorHint ? "bg-[#A855F7]" : "bg-white/20"
-          }`}
-        >
-          <span
-            className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out ${
-              displayImpostorHint ? "translate-x-5" : "translate-x-0"
-            }`}
-          />
-        </button>
-      </div>
-
-      <div className="mt-5">
-        <label className="font-medium block mb-2">Categories</label>
-        <button
-          onClick={() => setStage(STAGES.CATEGORY_SELECTION)}
-          className="w-full text-left rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-white hover:bg-white/15 transition-colors"
-        >
-          {Array.from(enabledCategories)
-            .map((cat) => CATEGORY_DISPLAY_NAMES[cat])
-            .join(", ") || "No categories selected"}
-        </button>
-      </div>
-
-      <button
-        onClick={startGame}
-        className="mt-4 inline-flex items-center justify-center rounded-xl bg-white px-4 py-2 font-medium text-[#0B0C24] hover:bg-white/90 active:scale-[.99]"
-      >
-        Start Game
-      </button>
-    </Card>
-  );
+    );
+  };
 
   const renderPlayers = () => (
     <div className="max-w-2xl mx-auto">
@@ -860,6 +1002,7 @@ export default function App() {
     >
       {stage === STAGES.CONFIG && renderConfig()}
       {stage === STAGES.CATEGORY_SELECTION && renderCategorySelection()}
+      {stage === STAGES.PLAYER_COUNT_SELECTION && renderPlayerCountSelection()}
       {stage === STAGES.PLAYERS && renderPlayers()}
       {stage === STAGES.REVEAL && renderReveal()}
       {stage === STAGES.VOTING && renderVotingPhase()}
