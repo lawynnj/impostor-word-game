@@ -8,46 +8,12 @@ import {
 } from "react-router-dom";
 
 import "./App.css";
+import { WORD_PAIRS } from "./wordPairs";
 
 const ROLES = {
   CIVILIAN: "CIVILIAN",
   IMPOSTOR: "IMPOSTOR",
 };
-
-// --- Built-in word pairs (randomized at Start Game) -------------------------
-const WORD_PAIRS = [
-  // Food
-  { secret: "Pizza", hint: "Food", category: "food" },
-  { secret: "Pineapple", hint: "Fruit", category: "food" },
-  { secret: "Sushi", hint: "Japanese dish", category: "food" },
-  { secret: "Chocolate", hint: "Sweet treat", category: "food" },
-  // Location
-  { secret: "Canada", hint: "Country", category: "location" },
-  { secret: "Volcano", hint: "Natural feature", category: "location" },
-  { secret: "Paris", hint: "City", category: "location" },
-  { secret: "Tokyo", hint: "Capital city", category: "location" },
-  // Sports
-  { secret: "Basketball", hint: "Sport", category: "sports" },
-  { secret: "Soccer", hint: "Team sport", category: "sports" },
-  { secret: "Tennis", hint: "Racket sport", category: "sports" },
-  { secret: "Swimming", hint: "Water sport", category: "sports" },
-  // Animals
-  { secret: "Elephant", hint: "Animal", category: "animals" },
-  { secret: "Lion", hint: "Big cat", category: "animals" },
-  { secret: "Dolphin", hint: "Marine mammal", category: "animals" },
-  { secret: "Penguin", hint: "Bird", category: "animals" },
-  // Object
-  { secret: "Laptop", hint: "Electronics", category: "object" },
-  { secret: "Twitter", hint: "App", category: "object" },
-  { secret: "Tesla", hint: "Car", category: "object" },
-  { secret: "Watch", hint: "Timepiece", category: "object" },
-  { secret: "Camera", hint: "Photography device", category: "object" },
-  // Movies
-  { secret: "Avatar", hint: "Movie", category: "movies" },
-  { secret: "Titanic", hint: "Film", category: "movies" },
-  { secret: "Inception", hint: "Sci-fi film", category: "movies" },
-  { secret: "Frozen", hint: "Animated film", category: "movies" },
-];
 
 // --- Category helpers ---------------------------------------------------------
 const CATEGORY_DISPLAY_NAMES = {
