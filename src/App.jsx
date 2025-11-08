@@ -1,17 +1,13 @@
 import React, { useMemo, useState, useEffect, useRef } from "react";
+import {
+  Routes,
+  Route,
+  useNavigate,
+  useParams,
+  useLocation,
+} from "react-router-dom";
 
 import "./App.css";
-// --- Game enums -------------------------------------------------------------
-const STAGES = {
-  CONFIG: "CONFIG",
-  CATEGORY_SELECTION: "CATEGORY_SELECTION",
-  PLAYER_COUNT_SELECTION: "PLAYER_COUNT_SELECTION",
-  IMPOSTOR_COUNT_SELECTION: "IMPOSTOR_COUNT_SELECTION",
-  PLAYERS: "PLAYERS",
-  REVEAL: "REVEAL",
-  VOTING: "VOTING",
-  RESULTS: "RESULTS",
-};
 
 const ROLES = {
   CIVILIAN: "CIVILIAN",
@@ -262,7 +258,8 @@ const loadSettingsFromStorage = () => {
 };
 
 export default function App() {
-  const [stage, setStage] = useState(STAGES.CONFIG);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   // Config
   const MIN = 3;
@@ -300,8 +297,6 @@ export default function App() {
   const [category, setCategory] = useState("");
 
   // Flow state
-  const [activePlayerIndex, setActivePlayerIndex] = useState(null);
-  const [showing, setShowing] = useState(false);
   const [startingPlayerIndex, setStartingPlayerIndex] = useState(null); // for Voting phase
   const revealContainerRef = useRef(null);
 
@@ -314,15 +309,15 @@ export default function App() {
   // Auto-advance to Voting when all players have revealed
   useEffect(() => {
     if (
-      stage === STAGES.PLAYERS &&
+      location.pathname === "/game" &&
       players.length > 0 &&
       revealedCount === players.length
     ) {
       const starter = Math.floor(Math.random() * players.length);
       setStartingPlayerIndex(starter);
-      setStage(STAGES.VOTING);
+      navigate("/voting");
     }
-  }, [stage, players, revealedCount]);
+  }, [location.pathname, players, revealedCount, navigate]);
 
   // Save settings to localStorage whenever they change
   useEffect(() => {
@@ -397,33 +392,25 @@ export default function App() {
 
     setPlayers(arr);
     setImpostorIndices(selectedIndices);
-    setActivePlayerIndex(null);
-    setShowing(false);
     setStartingPlayerIndex(null);
-    setStage(STAGES.PLAYERS);
+    navigate("/game");
   };
 
   const handlePickPlayer = (i) => {
     if (players[i].revealed) return;
-    setActivePlayerIndex(i);
-    setShowing(false);
-    setStage(STAGES.REVEAL);
+    navigate(`/reveal/${i}`);
   };
 
-  const handleTapBlackBox = () => setShowing(true);
-
-  const handleGotIt = () => {
-    if (activePlayerIndex == null) return;
+  const handleGotIt = (playerIndex) => {
+    if (playerIndex == null) return;
 
     setPlayers((prev) => {
       const next = [...prev];
-      next[activePlayerIndex] = { ...next[activePlayerIndex], revealed: true };
+      next[playerIndex] = { ...next[playerIndex], revealed: true };
       return next;
     });
 
-    setActivePlayerIndex(null);
-    setShowing(false);
-    setStage(STAGES.PLAYERS); // effect will auto-advance to VOTING if all revealed
+    navigate("/game"); // effect will auto-advance to VOTING if all revealed
   };
 
   // Confirm new game (avoid accidental taps)
@@ -431,10 +418,20 @@ export default function App() {
     const ok = window.confirm(
       "Start a new game? This will reset all progress."
     );
-    if (ok) window.location.reload();
+    if (ok) {
+      // Reset all game state
+      setPlayers([]);
+      setImpostorIndices([]);
+      setSecretWord("");
+      setImpostorHint("");
+      setCategory("");
+      setStartingPlayerIndex(null);
+      // Navigate to config screen
+      navigate("/");
+    }
   };
 
-  const handleRevealResults = () => setStage(STAGES.RESULTS);
+  const handleRevealResults = () => navigate("/results");
 
   const handleToggleCategory = (category) => {
     setEnabledCategories((prev) => {
@@ -453,7 +450,7 @@ export default function App() {
     if (enabledCategories.size === 0) {
       setEnabledCategories(new Set(getAllCategories()));
     }
-    setStage(STAGES.CONFIG);
+    navigate("/");
   };
 
   const handlePlayerCountChange = (delta) => {
@@ -546,7 +543,7 @@ export default function App() {
         {/* Header with back button */}
         <div className="flex items-center gap-2 mb-2">
           <button
-            onClick={() => setStage(STAGES.CONFIG)}
+            onClick={() => navigate("/")}
             aria-label="Back"
             className="-ml-1 inline-flex h-10 w-10 items-center justify-center rounded-full text-white/80 hover:text-white ring-1 ring-white/10"
           >
@@ -625,7 +622,7 @@ export default function App() {
         {/* Header with back button */}
         <div className="flex items-center gap-2 mb-2">
           <button
-            onClick={() => setStage(STAGES.CONFIG)}
+            onClick={() => navigate("/")}
             aria-label="Back"
             className="-ml-1 inline-flex h-10 w-10 items-center justify-center rounded-full text-white/80 hover:text-white ring-1 ring-white/10"
           >
@@ -712,7 +709,7 @@ export default function App() {
         <div className="grid grid-cols-2 gap-4 mb-6">
           {/* Player Count Card */}
           <button
-            onClick={() => setStage(STAGES.PLAYER_COUNT_SELECTION)}
+            onClick={() => navigate("/players")}
             className="bg-[#0B0C24] rounded-2xl p-6 flex flex-col items-center text-center hover:bg-[#332B4A] transition-colors border-2 border-purple-500/10"
           >
             {/* Icon Container */}
@@ -737,7 +734,7 @@ export default function App() {
 
           {/* Impostor Count Card */}
           <button
-            onClick={() => setStage(STAGES.IMPOSTOR_COUNT_SELECTION)}
+            onClick={() => navigate("/impostors")}
             className="bg-[#0B0C24] rounded-2xl p-6 flex flex-col items-center text-center hover:bg-[#332B4A] transition-colors border-2 border-purple-500/10"
           >
             {/* Icon Container */}
@@ -769,7 +766,7 @@ export default function App() {
             <label className="font-medium text-white">Categories</label>
           </div>
           <button
-            onClick={() => setStage(STAGES.CATEGORY_SELECTION)}
+            onClick={() => navigate("/categories")}
             className="w-full bg-[#2A2540] rounded-xl p-4 flex items-center justify-between hover:bg-[#332B4A] transition-colors"
           >
             <div className="text-left">
@@ -928,10 +925,12 @@ export default function App() {
     </div>
   );
 
-  const renderReveal = () => {
-    if (activePlayerIndex == null) return null;
-    const p = players[activePlayerIndex];
+  const renderReveal = (playerIndex, showing, setShowing) => {
+    if (playerIndex == null || !players[playerIndex]) return null;
+    const p = players[playerIndex];
     const isImpostor = p.role === ROLES.IMPOSTOR;
+
+    const handleTapBlackBox = () => setShowing(true);
 
     return (
       <Card className="text-center">
@@ -1043,7 +1042,7 @@ export default function App() {
         ) : null}
 
         <button
-          onClick={handleGotIt}
+          onClick={() => handleGotIt(playerIndex)}
           disabled={!showing}
           className={`mt-6 w-full inline-flex items-center justify-center rounded-xl px-4 py-3 font-medium transition ${
             showing
@@ -1203,6 +1202,32 @@ export default function App() {
     );
   };
 
+  // --- Route Components ------------------------------------------------------
+  const ConfigRoute = () => renderConfig();
+  const CategorySelectionRoute = () => renderCategorySelection();
+  const PlayerCountSelectionRoute = () => renderPlayerCountSelection();
+  const ImpostorCountSelectionRoute = () => renderImpostorCountSelection();
+  const PlayersRoute = () => renderPlayers();
+
+  const RevealRoute = () => {
+    const { playerIndex: playerIndexParam } = useParams();
+    const playerIndex = playerIndexParam
+      ? parseInt(playerIndexParam, 10)
+      : null;
+
+    // Local state for showing - resets when route changes
+    const [showing, setShowing] = useState(false);
+
+    useEffect(() => {
+      setShowing(false);
+    }, [playerIndex]);
+
+    return renderReveal(playerIndex, showing, setShowing);
+  };
+
+  const VotingRoute = () => renderVotingPhase();
+  const ResultsRoute = () => renderResults();
+
   // --- Prevent browser back exposing prior content --------------------------
   useEffect(() => {
     const onPop = () => {
@@ -1218,15 +1243,16 @@ export default function App() {
       className="min-h-screen w-full px-4 py-6 text-white"
       style={{ backgroundColor: "#0B0C24" }}
     >
-      {stage === STAGES.CONFIG && renderConfig()}
-      {stage === STAGES.CATEGORY_SELECTION && renderCategorySelection()}
-      {stage === STAGES.PLAYER_COUNT_SELECTION && renderPlayerCountSelection()}
-      {stage === STAGES.IMPOSTOR_COUNT_SELECTION &&
-        renderImpostorCountSelection()}
-      {stage === STAGES.PLAYERS && renderPlayers()}
-      {stage === STAGES.REVEAL && renderReveal()}
-      {stage === STAGES.VOTING && renderVotingPhase()}
-      {stage === STAGES.RESULTS && renderResults()}
+      <Routes>
+        <Route path="/" element={<ConfigRoute />} />
+        <Route path="/categories" element={<CategorySelectionRoute />} />
+        <Route path="/players" element={<PlayerCountSelectionRoute />} />
+        <Route path="/impostors" element={<ImpostorCountSelectionRoute />} />
+        <Route path="/game" element={<PlayersRoute />} />
+        <Route path="/reveal/:playerIndex" element={<RevealRoute />} />
+        <Route path="/voting" element={<VotingRoute />} />
+        <Route path="/results" element={<ResultsRoute />} />
+      </Routes>
     </div>
   );
 }
