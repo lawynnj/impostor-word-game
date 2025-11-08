@@ -262,6 +262,7 @@ export default function App() {
     const settings = loadSettingsFromStorage();
     return settings.playerCount;
   });
+  // Display category
   const [displayCategory, setDisplayCategory] = useState(() => {
     const settings = loadSettingsFromStorage();
     return settings.displayCategory;
