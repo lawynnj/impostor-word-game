@@ -220,6 +220,18 @@ const loadSettingsFromStorage = () => {
   const storedDisplayCategory = localStorage.getItem("displayCategory");
   const storedDisplayImpostorHint = localStorage.getItem("displayImpostorHint");
   const storedEnabledCategories = localStorage.getItem("enabledCategories");
+  const storedPlayerCount = localStorage.getItem("playerCount");
+
+  const MIN = 3;
+  const MAX = 12;
+  let playerCount = 3;
+  if (storedPlayerCount !== null) {
+    const parsed = JSON.parse(storedPlayerCount);
+    // Validate player count is within bounds
+    if (parsed >= MIN && parsed <= MAX) {
+      playerCount = parsed;
+    }
+  }
 
   return {
     displayCategory:
@@ -233,6 +245,7 @@ const loadSettingsFromStorage = () => {
     enabledCategories: storedEnabledCategories
       ? new Set(JSON.parse(storedEnabledCategories))
       : new Set(getAllCategories()),
+    playerCount,
   };
 };
 
@@ -242,10 +255,13 @@ export default function App() {
   // Config
   const MIN = 3;
   const MAX = 12;
-  const [playerCount, setPlayerCount] = useState(3);
 
   // Initialize settings from localStorage using lazy initialization
-  // Load once and use for all three settings
+  // Load once and use for all settings
+  const [playerCount, setPlayerCount] = useState(() => {
+    const settings = loadSettingsFromStorage();
+    return settings.playerCount;
+  });
   const [displayCategory, setDisplayCategory] = useState(() => {
     const settings = loadSettingsFromStorage();
     return settings.displayCategory;
@@ -292,6 +308,10 @@ export default function App() {
   }, [stage, players, revealedCount]);
 
   // Save settings to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem("playerCount", JSON.stringify(playerCount));
+  }, [playerCount]);
+
   useEffect(() => {
     localStorage.setItem("displayCategory", JSON.stringify(displayCategory));
   }, [displayCategory]);
