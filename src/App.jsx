@@ -225,9 +225,9 @@ export default function App() {
                 disabled
                   ? "opacity-40 cursor-not-allowed"
                   : "hover:scale-[1.01] active:scale-[.99]"
-              } bg-[conic-gradient(at_right,#3B82F6,#8B5CF6,#9333EA)]`}
+              } bg-[conic-gradient(at_right,#3B82F6,#8B5CF6,#A855F7)]`}
             >
-              <div className="rounded-3xl h-full w-full bg-white/5 ring-1 ring-white/10 p-4">
+              <div className="rounded-3xl h-full w-full bg-[#0B0C24] p-4">
                 <div className="flex h-full flex-col items-start justify-center">
                   {/* Avatar with glow */}
                   <div className="relative">
@@ -251,12 +251,6 @@ export default function App() {
         <span className="text-[#B3B3C0]">
           Revealed: {revealedCount}/{players.length}
         </span>
-        <button
-          onClick={handleNewGameConfirm}
-          className="rounded-xl border border-white/20 bg-white/10 px-4 py-2 text-white hover:bg-white/15"
-        >
-          New Game
-        </button>
       </div>
     </div>
   );
