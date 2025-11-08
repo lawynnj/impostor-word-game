@@ -228,7 +228,7 @@ export default function App() {
               } bg-[conic-gradient(at_right,#3B82F6,#8B5CF6,#A855F7)]`}
             >
               <div className="rounded-3xl h-full w-full bg-[#0B0C24] p-4">
-                <div className="flex h-full flex-col items-start justify-center">
+                <div className="flex h-full flex-col items-center justify-center">
                   {/* Avatar with glow */}
                   <div className="relative">
                     <div className="absolute inset-0 rounded-full blur-xl opacity-60 bg-linear-to-br from-[#3B82F6] to-[#A855F7]" />
@@ -346,9 +346,17 @@ export default function App() {
               ))}
             </div>
           ) : (
-            <div className="px-4 text-center text-white z-10">
-              <div className="text-xl font-semibold">{secretWord}</div>
-              <div className="mt-2 font-medium">You are a Civilian.</div>
+            <div className="px-4 text-center z-10">
+              <div
+                className="text-4xl sm:text-5xl font-bold"
+                style={{
+                  color: "#00FFFF",
+                  textShadow:
+                    "0 0 10px rgba(0, 255, 255, 0.5), 0 0 20px rgba(0, 255, 255, 0.3)",
+                }}
+              >
+                {secretWord}
+              </div>
             </div>
           )}
         </div>
@@ -365,7 +373,7 @@ export default function App() {
             {/* Clue Card */}
             <div
               className="mt-6 rounded-2xl p-5 text-center"
-              style={{ backgroundColor: "#1e1e2e" }}
+              style={{ backgroundColor: "#210919", border: "1px solid #22F37" }}
             >
               <div
                 className="flex items-center justify-center gap-2 mb-4"
@@ -395,9 +403,7 @@ export default function App() {
           disabled={!showing}
           className={`mt-6 w-full inline-flex items-center justify-center rounded-xl px-4 py-3 font-medium transition ${
             showing
-              ? isImpostor
-                ? "bg-linear-to-r from-[#9333EA] to-[#A855F7] text-white hover:opacity-90"
-                : "bg-white text-[#0B0C24] hover:bg-white/90"
+              ? "bg-linear-to-r from-[#9333EA] to-[#A855F7] text-white hover:opacity-90"
               : "bg-white/30 text-white/60 cursor-not-allowed"
           }`}
         >
