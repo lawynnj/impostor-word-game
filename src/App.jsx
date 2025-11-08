@@ -6,6 +6,7 @@ const STAGES = {
   CONFIG: "CONFIG",
   CATEGORY_SELECTION: "CATEGORY_SELECTION",
   PLAYER_COUNT_SELECTION: "PLAYER_COUNT_SELECTION",
+  IMPOSTOR_COUNT_SELECTION: "IMPOSTOR_COUNT_SELECTION",
   PLAYERS: "PLAYERS",
   REVEAL: "REVEAL",
   VOTING: "VOTING",
@@ -221,6 +222,7 @@ const loadSettingsFromStorage = () => {
   const storedDisplayImpostorHint = localStorage.getItem("displayImpostorHint");
   const storedEnabledCategories = localStorage.getItem("enabledCategories");
   const storedPlayerCount = localStorage.getItem("playerCount");
+  const storedImpostorCount = localStorage.getItem("impostorCount");
 
   const MIN = 3;
   const MAX = 12;
@@ -230,6 +232,15 @@ const loadSettingsFromStorage = () => {
     // Validate player count is within bounds
     if (parsed >= MIN && parsed <= MAX) {
       playerCount = parsed;
+    }
+  }
+
+  let impostorCount = 1;
+  if (storedImpostorCount !== null) {
+    const parsed = JSON.parse(storedImpostorCount);
+    // Validate impostor count is at least 1 and less than player count
+    if (parsed >= 1 && parsed < playerCount) {
+      impostorCount = parsed;
     }
   }
 
@@ -246,6 +257,7 @@ const loadSettingsFromStorage = () => {
       ? new Set(JSON.parse(storedEnabledCategories))
       : new Set(getAllCategories()),
     playerCount,
+    impostorCount,
   };
 };
 
@@ -275,10 +287,14 @@ export default function App() {
     const settings = loadSettingsFromStorage();
     return settings.enabledCategories;
   });
+  const [impostorCount, setImpostorCount] = useState(() => {
+    const settings = loadSettingsFromStorage();
+    return settings.impostorCount;
+  });
 
   // Core state
   const [players, setPlayers] = useState([]); // { index, role, revealed }
-  const [impostorIndex, setImpostorIndex] = useState(null);
+  const [impostorIndices, setImpostorIndices] = useState([]);
   const [secretWord, setSecretWord] = useState("");
   const [impostorHint, setImpostorHint] = useState("");
   const [category, setCategory] = useState("");
@@ -331,10 +347,19 @@ export default function App() {
     );
   }, [enabledCategories]);
 
+  useEffect(() => {
+    localStorage.setItem("impostorCount", JSON.stringify(impostorCount));
+  }, [impostorCount]);
+
   // --- Actions --------------------------------------------------------------
   const startGame = () => {
     if (playerCount < MIN || playerCount > MAX) {
       alert(`Player count must be between ${MIN} and ${MAX}.`);
+      return;
+    }
+
+    if (impostorCount >= playerCount) {
+      alert(`Number of impostors must be less than the number of players.`);
       return;
     }
 
@@ -360,11 +385,18 @@ export default function App() {
       revealed: false,
     }));
 
-    const impIdx = Math.floor(Math.random() * playerCount);
-    arr[impIdx].role = ROLES.IMPOSTOR;
+    // Select multiple impostors randomly
+    const selectedIndices = [];
+    while (selectedIndices.length < impostorCount) {
+      const idx = Math.floor(Math.random() * playerCount);
+      if (!selectedIndices.includes(idx)) {
+        selectedIndices.push(idx);
+        arr[idx].role = ROLES.IMPOSTOR;
+      }
+    }
 
     setPlayers(arr);
-    setImpostorIndex(impIdx);
+    setImpostorIndices(selectedIndices);
     setActivePlayerIndex(null);
     setShowing(false);
     setStartingPlayerIndex(null);
@@ -428,6 +460,18 @@ export default function App() {
     const newCount = playerCount + delta;
     if (newCount >= MIN && newCount <= MAX) {
       setPlayerCount(newCount);
+      // Ensure impostor count doesn't exceed new player count
+      if (impostorCount >= newCount) {
+        setImpostorCount(Math.max(1, newCount - 1));
+      }
+    }
+  };
+
+  const handleImpostorCountChange = (delta) => {
+    const newCount = impostorCount + delta;
+    const maxImpostors = playerCount - 1;
+    if (newCount >= 1 && newCount <= maxImpostors) {
+      setImpostorCount(newCount);
     }
   };
 
@@ -572,6 +616,83 @@ export default function App() {
     );
   };
 
+  const renderImpostorCountSelection = () => {
+    const maxImpostors = playerCount - 1;
+    return (
+      <div className="max-w-2xl mx-auto">
+        {/* Header with back button */}
+        <div className="flex items-center gap-2 mb-2">
+          <button
+            onClick={() => setStage(STAGES.CONFIG)}
+            aria-label="Back"
+            className="-ml-1 inline-flex h-10 w-10 items-center justify-center rounded-full text-white/80 hover:text-white ring-1 ring-white/10"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              className="h-5 w-5"
+            >
+              <path
+                fillRule="evenodd"
+                d="M10.03 3.97a.75.75 0 0 1 0 1.06L4.81 10.25H21a.75.75 0 0 1 0 1.5H4.81l5.22 5.22a.75.75 0 1 1-1.06 1.06l-6.5-6.5a.75.75 0 0 1 0-1.06l6.5-6.5a.75.75 0 0 1 1.06 0Z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </button>
+          <h1 className="text-3xl font-semibold">Impostors</h1>
+        </div>
+
+        {/* Impostor Count Display and Controls */}
+        <div className="mt-8 flex flex-col items-center">
+          <div className="text-white/60 text-sm mb-4">How many imposters?</div>
+          <div className="text-white text-7xl font-bold mb-8">
+            {impostorCount}
+          </div>
+
+          <div className="flex items-center gap-6">
+            <button
+              onClick={() => handleImpostorCountChange(-1)}
+              disabled={impostorCount <= 1}
+              className="w-14 h-14 rounded-full bg-[#2A2540] text-white flex items-center justify-center hover:bg-[#332B4A] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="h-6 w-6"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M3.75 12a.75.75 0 0 1 .75-.75h15a.75.75 0 0 1 0 1.5h-15a.75.75 0 0 1-.75-.75Z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </button>
+            <button
+              onClick={() => handleImpostorCountChange(1)}
+              disabled={impostorCount >= maxImpostors}
+              className="w-14 h-14 rounded-full bg-[#2A2540] text-white flex items-center justify-center hover:bg-[#332B4A] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="h-6 w-6"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   const renderConfig = () => {
     const allCategories = getAllCategories();
     const isAllCategoriesSelected =
@@ -584,35 +705,55 @@ export default function App() {
 
     return (
       <div className="max-w-2xl mx-auto">
-        {/* Players Section */}
-        <div className="mb-6">
-          <div className="flex items-center gap-2 mb-3">
-            <label className="font-medium text-white">Players</label>
-          </div>
+        {/* Player and Impostor Count Cards */}
+        <div className="grid grid-cols-2 gap-4 mb-6">
+          {/* Player Count Card */}
           <button
             onClick={() => setStage(STAGES.PLAYER_COUNT_SELECTION)}
-            className="w-full bg-[#2A2540] rounded-xl p-4 flex items-center justify-between hover:bg-[#332B4A] transition-colors"
+            className="bg-[#2A2540] rounded-2xl p-6 flex flex-col items-center text-center hover:bg-[#332B4A] transition-colors"
           >
-            <div className="text-left">
-              <div className="text-white font-medium">
-                {playerCount} Players
-              </div>
-              <div className="text-white/60 text-sm mt-1">
-                min {MIN}, max {MAX}
-              </div>
+            {/* Icon Container */}
+            <div className="bg-[#1A1528] rounded-xl p-3 mb-4">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="w-8 h-8 text-white"
+              >
+                <path d="M4.5 6.375a4.125 4.125 0 1 1 8.25 0 4.125 4.125 0 0 1-8.25 0ZM14.25 8.625a3.375 3.375 0 1 1 6.75 0 3.375 3.375 0 0 1-6.75 0ZM1.5 19.125a7.125 7.125 0 0 1 14.25 0v.003c0 .597-.229 1.17-.64 1.591l-.78.78c-.063.063-.143.138-.23.23H3.15c-.087-.092-.167-.167-.23-.23l-.78-.78a2.25 2.25 0 0 1-.64-1.591v-.003ZM17.25 19.125l-.001.144a2.25 2.25 0 0 1-.233 1.027l-1.087 1.087a2.236 2.236 0 0 1-1.58.622H7.5a2.236 2.236 0 0 1-1.581-.622l-1.087-1.087a2.25 2.25 0 0 1-.233-1.027L5.25 19.125h12Z" />
+              </svg>
             </div>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              className="h-5 w-5 text-white"
-            >
-              <path
-                fillRule="evenodd"
-                d="M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z"
-                clipRule="evenodd"
-              />
-            </svg>
+            {/* Question Text */}
+            <div className="text-white text-sm mb-3">How many players?</div>
+            {/* Large Number */}
+            <div className="text-white text-5xl font-bold">{playerCount}</div>
+          </button>
+
+          {/* Impostor Count Card */}
+          <button
+            onClick={() => setStage(STAGES.IMPOSTOR_COUNT_SELECTION)}
+            className="bg-[#2A2540] rounded-2xl p-6 flex flex-col items-center text-center hover:bg-[#332B4A] transition-colors"
+          >
+            {/* Icon Container */}
+            <div className="bg-[#1A1528] rounded-xl p-3 mb-4">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="w-8 h-8 text-white"
+              >
+                <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
+                <path
+                  fillRule="evenodd"
+                  d="M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113-1.487 4.471-5.705 7.697-10.677 7.697-4.97 0-9.186-3.223-10.675-7.69a1.762 1.762 0 0 1 0-1.113ZM17.25 12a5.25 5.25 0 1 1-10.5 0 5.25 5.25 0 0 1 10.5 0Z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </div>
+            {/* Question Text */}
+            <div className="text-white text-sm mb-3">How many imposters?</div>
+            {/* Large Number */}
+            <div className="text-white text-5xl font-bold">{impostorCount}</div>
           </button>
         </div>
 
@@ -1035,14 +1176,16 @@ export default function App() {
   };
 
   const renderResults = () => {
-    const impostorLabel =
-      impostorIndex != null ? `Player ${impostorIndex + 1}` : "Unknown";
+    const impostorLabels =
+      impostorIndices.length > 0
+        ? impostorIndices.map((idx) => `Player ${idx + 1}`).join(", ")
+        : "Unknown";
     return (
       <Card className="text-center">
         <SectionTitle>Results</SectionTitle>
         <p className="mt-2 text-lg">
-          The impostor was:{" "}
-          <span className="font-semibold">{impostorLabel}</span>
+          The {impostorIndices.length === 1 ? "impostor was" : "impostors were"}
+          : <span className="font-semibold">{impostorLabels}</span>
         </p>
         <div className="mt-4 flex items-center justify-center gap-3">
           <button
@@ -1074,6 +1217,8 @@ export default function App() {
       {stage === STAGES.CONFIG && renderConfig()}
       {stage === STAGES.CATEGORY_SELECTION && renderCategorySelection()}
       {stage === STAGES.PLAYER_COUNT_SELECTION && renderPlayerCountSelection()}
+      {stage === STAGES.IMPOSTOR_COUNT_SELECTION &&
+        renderImpostorCountSelection()}
       {stage === STAGES.PLAYERS && renderPlayers()}
       {stage === STAGES.REVEAL && renderReveal()}
       {stage === STAGES.VOTING && renderVotingPhase()}
