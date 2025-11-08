@@ -221,7 +221,7 @@ export default function App() {
               key={p.index}
               disabled={disabled}
               onClick={() => handlePickPlayer(i)}
-              className={`group relative rounded-3xl p-[2px] transition ${
+              className={`group relative rounded-3xl p-0.5 transition ${
                 disabled
                   ? "opacity-40 cursor-not-allowed"
                   : "hover:scale-[1.01] active:scale-[.99]"
