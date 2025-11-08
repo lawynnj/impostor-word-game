@@ -215,6 +215,27 @@ const AnimatedDots = ({ containerRef }) => {
   );
 };
 
+// Load settings from localStorage helper
+const loadSettingsFromStorage = () => {
+  const storedDisplayCategory = localStorage.getItem("displayCategory");
+  const storedDisplayImpostorHint = localStorage.getItem("displayImpostorHint");
+  const storedEnabledCategories = localStorage.getItem("enabledCategories");
+
+  return {
+    displayCategory:
+      storedDisplayCategory !== null
+        ? JSON.parse(storedDisplayCategory)
+        : false,
+    displayImpostorHint:
+      storedDisplayImpostorHint !== null
+        ? JSON.parse(storedDisplayImpostorHint)
+        : true,
+    enabledCategories: storedEnabledCategories
+      ? new Set(JSON.parse(storedEnabledCategories))
+      : new Set(getAllCategories()),
+  };
+};
+
 export default function App() {
   const [stage, setStage] = useState(STAGES.CONFIG);
 
@@ -222,11 +243,21 @@ export default function App() {
   const MIN = 3;
   const MAX = 12;
   const [playerCount, setPlayerCount] = useState(3);
-  const [displayCategory, setDisplayCategory] = useState(false);
-  const [displayImpostorHint, setDisplayImpostorHint] = useState(true);
-  const [enabledCategories, setEnabledCategories] = useState(
-    new Set(getAllCategories())
-  );
+
+  // Initialize settings from localStorage using lazy initialization
+  // Load once and use for all three settings
+  const [displayCategory, setDisplayCategory] = useState(() => {
+    const settings = loadSettingsFromStorage();
+    return settings.displayCategory;
+  });
+  const [displayImpostorHint, setDisplayImpostorHint] = useState(() => {
+    const settings = loadSettingsFromStorage();
+    return settings.displayImpostorHint;
+  });
+  const [enabledCategories, setEnabledCategories] = useState(() => {
+    const settings = loadSettingsFromStorage();
+    return settings.enabledCategories;
+  });
 
   // Core state
   const [players, setPlayers] = useState([]); // { index, role, revealed }
@@ -259,6 +290,25 @@ export default function App() {
       setStage(STAGES.VOTING);
     }
   }, [stage, players, revealedCount]);
+
+  // Save settings to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem("displayCategory", JSON.stringify(displayCategory));
+  }, [displayCategory]);
+
+  useEffect(() => {
+    localStorage.setItem(
+      "displayImpostorHint",
+      JSON.stringify(displayImpostorHint)
+    );
+  }, [displayImpostorHint]);
+
+  useEffect(() => {
+    localStorage.setItem(
+      "enabledCategories",
+      JSON.stringify(Array.from(enabledCategories))
+    );
+  }, [enabledCategories]);
 
   // --- Actions --------------------------------------------------------------
   const startGame = () => {
