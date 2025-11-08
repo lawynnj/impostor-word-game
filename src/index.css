@@ -11,6 +11,10 @@
     background-color: #0b0c24;
     color: white;
   }
+  body,
+  body * {
+    letter-spacing: 0.03em !important;
+  }
 }
 
 /* optional: a helper for secondary text color used in the mock */
