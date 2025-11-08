@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useEffect } from "react";
-import "./App.css";
 
+import "./App.css";
 // --- Game enums -------------------------------------------------------------
 const STAGES = {
   CONFIG: "CONFIG",
@@ -184,32 +184,70 @@ export default function App() {
   );
 
   const renderPlayers = () => (
-    <Card>
-      <SectionTitle>Select the active player</SectionTitle>
-      <div className="mt-1" />
-      <SubText>
-        Pass the phone. The active player taps their number to privately reveal
-        their role.
-      </SubText>
-
-      <div className="mt-5 grid gap-2">
-        {players.map((p, i) => (
-          <button
-            key={p.index}
-            disabled={p.revealed}
-            onClick={() => handlePickPlayer(i)}
-            className={`w-full text-left rounded-xl border px-4 py-3 transition ${
-              p.revealed
-                ? "border-white/10 bg-white/10 text-white/40 cursor-not-allowed"
-                : "border-white/10 bg-white/5 hover:bg-white/10"
-            }`}
+    <div className="max-w-2xl mx-auto">
+      {/* Header with back (mapped to New Game confirm) */}
+      <div className="flex items-center gap-2 mb-2">
+        <button
+          onClick={handleNewGameConfirm}
+          aria-label="Back"
+          className="-ml-1 inline-flex h-10 w-10 items-center justify-center rounded-full text-white/80 hover:text-white ring-1 ring-white/10"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            className="h-5 w-5"
           >
-            Player {p.index}
-          </button>
-        ))}
+            <path
+              fillRule="evenodd"
+              d="M10.03 3.97a.75.75 0 0 1 0 1.06L4.81 10.25H21a.75.75 0 0 1 0 1.5H4.81l5.22 5.22a.75.75 0 1 1-1.06 1.06l-6.5-6.5a.75.75 0 0 1 0-1.06l6.5-6.5a.75.75 0 0 1 1.06 0Z"
+              clipRule="evenodd"
+            />
+          </svg>
+        </button>
+        <h1 className="text-3xl font-semibold">Players</h1>
+      </div>
+      <p className="text-[#B3B3C0] mb-5">
+        Tap your name to reveal your word, then pass the device to the next
+        player.
+      </p>
+
+      {/* Grid of player tiles */}
+      <div className="grid grid-cols-2 gap-4">
+        {players.map((p, i) => {
+          const disabled = p.revealed;
+          return (
+            <button
+              key={p.index}
+              disabled={disabled}
+              onClick={() => handlePickPlayer(i)}
+              className={`group relative rounded-3xl p-[2px] transition ${
+                disabled
+                  ? "opacity-40 cursor-not-allowed"
+                  : "hover:scale-[1.01] active:scale-[.99]"
+              } bg-[conic-gradient(at_right,#3B82F6,#8B5CF6,#9333EA)]`}
+            >
+              <div className="rounded-3xl h-full w-full bg-white/5 ring-1 ring-white/10 p-4">
+                <div className="flex h-full flex-col items-start justify-center">
+                  {/* Avatar with glow */}
+                  <div className="relative">
+                    <div className="absolute inset-0 rounded-full blur-xl opacity-60 bg-gradient-to-br from-[#3B82F6] to-[#A855F7]" />
+                    <div className="relative flex h-16 w-16 items-center justify-center rounded-full text-white bg-gradient-to-br from-[#3B82F6] to-[#A855F7] shadow-inner">
+                      <span className="text-xl font-semibold">P</span>
+                    </div>
+                  </div>
+                  <div className="mt-3 text-lg font-medium">
+                    Player {p.index}
+                  </div>
+                </div>
+              </div>
+            </button>
+          );
+        })}
       </div>
 
-      <div className="mt-4 flex items-center justify-between">
+      {/* Footer row */}
+      <div className="mt-5 flex items-center justify-between">
         <span className="text-[#B3B3C0]">
           Revealed: {revealedCount}/{players.length}
         </span>
@@ -220,7 +258,7 @@ export default function App() {
           New Game
         </button>
       </div>
-    </Card>
+    </div>
   );
 
   const renderReveal = () => {
