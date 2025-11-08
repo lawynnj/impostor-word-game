@@ -202,6 +202,7 @@ export default function App() {
   const MAX = 12;
   const [playerCount, setPlayerCount] = useState(3);
   const [displayCategory, setDisplayCategory] = useState(false);
+  const [displayImpostorHint, setDisplayImpostorHint] = useState(true);
 
   // Core state
   const [players, setPlayers] = useState([]); // { index, role, revealed }
@@ -323,21 +324,47 @@ export default function App() {
           min {MIN}, max {MAX}
         </span>
       </div>
-
       <div className="flex items-center gap-3 mt-5">
         <label htmlFor="displayCategory" className="font-medium">
-          Display category?
+          Display category
         </label>
-        <input
+        <button
           id="displayCategory"
-          type="checkbox"
-          checked={displayCategory}
-          onChange={(e) => setDisplayCategory(e.target.checked)}
-          className="w-5 h-5 rounded border-white/20 bg-white/10 text-[#A855F7] focus:ring-2 focus:ring-white/30 cursor-pointer"
-        />
-        <span className="text-[#B3B3C0] text-sm">
-          Show category in reveal screen
-        </span>
+          type="button"
+          role="switch"
+          aria-checked={displayCategory}
+          onClick={() => setDisplayCategory(!displayCategory)}
+          className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-white/30 focus:ring-offset-2 focus:ring-offset-[#0B0C24] ${
+            displayCategory ? "bg-[#A855F7]" : "bg-white/20"
+          }`}
+        >
+          <span
+            className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out ${
+              displayCategory ? "translate-x-5" : "translate-x-0"
+            }`}
+          />
+        </button>
+      </div>
+      <div className="flex items-center gap-3 mt-5">
+        <label htmlFor="displayImpostorHint" className="font-medium">
+          Display hint to impostor
+        </label>
+        <button
+          id="displayImpostorHint"
+          type="button"
+          role="switch"
+          aria-checked={displayImpostorHint}
+          onClick={() => setDisplayImpostorHint(!displayImpostorHint)}
+          className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-white/30 focus:ring-offset-2 focus:ring-offset-[#0B0C24] ${
+            displayImpostorHint ? "bg-[#A855F7]" : "bg-white/20"
+          }`}
+        >
+          <span
+            className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out ${
+              displayImpostorHint ? "translate-x-5" : "translate-x-0"
+            }`}
+          />
+        </button>
       </div>
 
       <button
@@ -505,7 +532,7 @@ export default function App() {
             </svg>
             <span className="text-sm sm:text-base">Tap the box to reveal</span>
           </div>
-        ) : isImpostor ? (
+        ) : isImpostor && displayImpostorHint ? (
           <>
             {/* Clue Card */}
             <div
