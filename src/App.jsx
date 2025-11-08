@@ -4,6 +4,7 @@ import "./App.css";
 // --- Game enums -------------------------------------------------------------
 const STAGES = {
   CONFIG: "CONFIG",
+  CATEGORY_SELECTION: "CATEGORY_SELECTION",
   PLAYERS: "PLAYERS",
   REVEAL: "REVEAL",
   VOTING: "VOTING",
@@ -49,6 +50,25 @@ const WORD_PAIRS = [
   { secret: "Inception", hint: "Sci-fi film", category: "movies" },
   { secret: "Frozen", hint: "Animated film", category: "movies" },
 ];
+
+// --- Category helpers ---------------------------------------------------------
+const CATEGORY_DISPLAY_NAMES = {
+  food: "Food",
+  location: "Locations",
+  sports: "Sports",
+  animals: "Animals",
+  object: "Objects",
+  movies: "Movies",
+};
+
+const getAllCategories = () => {
+  const categories = [...new Set(WORD_PAIRS.map((pair) => pair.category))];
+  return categories;
+};
+
+const getWordCountForCategory = (category) => {
+  return WORD_PAIRS.filter((pair) => pair.category === category).length;
+};
 
 // --- Helper UI --------------------------------------------------------------
 const SectionTitle = ({ children }) => (
@@ -203,6 +223,9 @@ export default function App() {
   const [playerCount, setPlayerCount] = useState(3);
   const [displayCategory, setDisplayCategory] = useState(false);
   const [displayImpostorHint, setDisplayImpostorHint] = useState(true);
+  const [enabledCategories, setEnabledCategories] = useState(
+    new Set(getAllCategories())
+  );
 
   // Core state
   const [players, setPlayers] = useState([]); // { index, role, revealed }
@@ -243,7 +266,18 @@ export default function App() {
       return;
     }
 
-    const pair = WORD_PAIRS[Math.floor(Math.random() * WORD_PAIRS.length)];
+    // Filter word pairs by enabled categories
+    const availablePairs = WORD_PAIRS.filter((pair) =>
+      enabledCategories.has(pair.category)
+    );
+
+    if (availablePairs.length === 0) {
+      alert("Please enable at least one category.");
+      return;
+    }
+
+    const pair =
+      availablePairs[Math.floor(Math.random() * availablePairs.length)];
     setSecretWord(pair.secret);
     setImpostorHint(pair.hint);
     setCategory(pair.category);
@@ -298,7 +332,83 @@ export default function App() {
 
   const handleRevealResults = () => setStage(STAGES.RESULTS);
 
+  const handleToggleCategory = (category) => {
+    setEnabledCategories((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(category)) {
+        newSet.delete(category);
+      } else {
+        newSet.add(category);
+      }
+      return newSet;
+    });
+  };
+
   // --- Screens --------------------------------------------------------------
+  const renderCategorySelection = () => {
+    const allCategories = getAllCategories();
+
+    return (
+      <div className="max-w-2xl mx-auto">
+        {/* Header with back button */}
+        <div className="flex items-center gap-2 mb-2">
+          <button
+            onClick={() => setStage(STAGES.CONFIG)}
+            aria-label="Back"
+            className="-ml-1 inline-flex h-10 w-10 items-center justify-center rounded-full text-white/80 hover:text-white ring-1 ring-white/10"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              className="h-5 w-5"
+            >
+              <path
+                fillRule="evenodd"
+                d="M10.03 3.97a.75.75 0 0 1 0 1.06L4.81 10.25H21a.75.75 0 0 1 0 1.5H4.81l5.22 5.22a.75.75 0 1 1-1.06 1.06l-6.5-6.5a.75.75 0 0 1 0-1.06l6.5-6.5a.75.75 0 0 1 1.06 0Z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </button>
+          <h1 className="text-3xl font-semibold">Category Selection</h1>
+        </div>
+
+        {/* Category cards grid */}
+        <div className="grid grid-cols-2 gap-4 mt-5">
+          {allCategories.map((category) => {
+            const isActive = enabledCategories.has(category);
+            const wordCount = getWordCountForCategory(category);
+            const displayName = CATEGORY_DISPLAY_NAMES[category];
+
+            return (
+              <button
+                key={category}
+                onClick={() => handleToggleCategory(category)}
+                className={`rounded-2xl p-4 text-left transition-all ${
+                  isActive
+                    ? "bg-[#3B82F6] border-2 border-[#60A5FA]"
+                    : "bg-[#151530] border-2 border-[#FACC15]"
+                } hover:scale-[1.02] active:scale-[.98]`}
+              >
+                <div className="text-white font-semibold text-lg mb-2">
+                  {displayName}
+                </div>
+                <div className="flex items-center gap-2 text-white/90 text-sm">
+                  <div
+                    className={`w-2 h-2 rounded-full ${
+                      isActive ? "bg-[#60A5FA]" : "bg-[#FACC15]"
+                    }`}
+                  />
+                  <span>{wordCount} words</span>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
+
   const renderConfig = () => (
     <Card>
       <SectionTitle>Game Settings</SectionTitle>
@@ -364,6 +474,18 @@ export default function App() {
               displayImpostorHint ? "translate-x-5" : "translate-x-0"
             }`}
           />
+        </button>
+      </div>
+
+      <div className="mt-5">
+        <label className="font-medium block mb-2">Categories</label>
+        <button
+          onClick={() => setStage(STAGES.CATEGORY_SELECTION)}
+          className="w-full text-left rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-white hover:bg-white/15 transition-colors"
+        >
+          {Array.from(enabledCategories)
+            .map((cat) => CATEGORY_DISPLAY_NAMES[cat])
+            .join(", ") || "No categories selected"}
         </button>
       </div>
 
@@ -737,6 +859,7 @@ export default function App() {
       style={{ backgroundColor: "#0B0C24" }}
     >
       {stage === STAGES.CONFIG && renderConfig()}
+      {stage === STAGES.CATEGORY_SELECTION && renderCategorySelection()}
       {stage === STAGES.PLAYERS && renderPlayers()}
       {stage === STAGES.REVEAL && renderReveal()}
       {stage === STAGES.VOTING && renderVotingPhase()}
