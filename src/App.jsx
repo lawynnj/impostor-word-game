@@ -260,11 +260,39 @@ export default function App() {
     const p = players[activePlayerIndex];
     const isImpostor = p.role === ROLES.IMPOSTOR;
 
+    // Generate random dots for the reveal box
+    const generateDots = () => {
+      const dots = [];
+      const colors = [
+        "#60A5FA", // light blue
+        "#34D399", // light green
+        "#F472B6", // light pink
+        "#A78BFA", // light purple
+        "#FFFFFF", // white
+      ];
+      for (let i = 0; i < 80; i++) {
+        dots.push({
+          x: Math.random() * 100,
+          y: Math.random() * 100,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          size: Math.random() * 4 + 2,
+        });
+      }
+      return dots;
+    };
+
+    const dots = generateDots();
+
     return (
       <Card className="text-center">
-        <SectionTitle>Player {p.index}</SectionTitle>
-        <div className="mt-1" />
-        <SubText>Tap the black box to reveal.</SubText>
+        <div className="text-center">
+          <h1 className="text-lg sm:text-xl">
+            <span className="text-[#B3B3C0]">The word for </span>
+            <span className="text-[#A855F7] font-semibold">
+              Player {p.index}
+            </span>
+          </h1>
+        </div>
 
         <div
           role="button"
@@ -274,10 +302,27 @@ export default function App() {
           onKeyDown={(e) =>
             (e.key === "Enter" || e.key === " ") && handleTapBlackBox()
           }
-          className="mt-4 flex h-56 w-full select-none items-center justify-center rounded-2xl bg-black"
+          className="mt-6 flex h-56 w-full select-none items-center justify-center rounded-2xl relative overflow-hidden"
+          style={{ backgroundColor: "#1a1b2e" }}
         >
-          {!showing ? null : (
-            <div className="px-4 text-center text-white">
+          {!showing ? (
+            <div className="absolute inset-0">
+              {dots.map((dot, i) => (
+                <div
+                  key={i}
+                  className="absolute rounded-full"
+                  style={{
+                    left: `${dot.x}%`,
+                    top: `${dot.y}%`,
+                    width: `${dot.size}px`,
+                    height: `${dot.size}px`,
+                    backgroundColor: dot.color,
+                  }}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="px-4 text-center text-white z-10">
               <div className="text-xl font-semibold">
                 {isImpostor ? impostorHint : secretWord}
               </div>
@@ -290,10 +335,17 @@ export default function App() {
           )}
         </div>
 
+        <div className="mt-6 flex items-center justify-center gap-2 text-[#60A5FA]">
+          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M9 11.24V7.5a2.5 2.5 0 0 1 5 0v3.74c1.21-.81 2-2.18 2-3.74C16 5.01 13.99 3 11.5 3S7 5.01 7 7.5c0 1.56.79 2.93 2 3.74zm9.84 4.63l-4.54-2.26c-.17-.07-.35-.11-.54-.11H13v-6c0-.83-.67-1.5-1.5-1.5S10 6.67 10 7.5v10.74l-3.43-.72c-.08-.01-.15-.03-.24-.03-.31 0-.59.13-.79.33l-.79.8 4.94 4.94c.27.27.65.44 1.06.44h6.79c.75 0 1.33-.55 1.44-1.28l.75-5.27c.01-.07.02-.14.02-.2 0-.62-.38-1.16-.91-1.38z" />
+          </svg>
+          <span className="text-sm sm:text-base">Tap the box to reveal</span>
+        </div>
+
         <button
           onClick={handleGotIt}
           disabled={!showing}
-          className={`mt-4 inline-flex items-center justify-center rounded-xl px-4 py-2 font-medium transition ${
+          className={`mt-6 inline-flex items-center justify-center rounded-xl px-4 py-2 font-medium transition ${
             showing
               ? "bg-white text-[#0B0C24] hover:bg-white/90"
               : "bg-white/30 text-white/60 cursor-not-allowed"
@@ -301,10 +353,6 @@ export default function App() {
         >
           Got it
         </button>
-
-        <SubText>
-          Pass the phone to the next player after tapping “Got it”.
-        </SubText>
       </Card>
     );
   };
