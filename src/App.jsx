@@ -1,4 +1,5 @@
 import React, { useMemo, useState, useEffect } from "react";
+import "./App.css";
 
 // --- Game enums -------------------------------------------------------------
 const STAGES = {
@@ -28,69 +29,32 @@ const WORD_PAIRS = [
   { secret: "Volcano", hint: "Nature" },
 ];
 
-// --- Styles (inline for portability) ----------------------------------------
-const card = {
-  maxWidth: 560,
-  margin: "24px auto",
-  padding: 16,
-  borderRadius: 16,
-  boxShadow: "0 10px 24px rgba(0,0,0,0.08)",
-  border: "1px solid #eaeaea",
-  fontFamily:
-    "ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial",
-};
+// --- Helper UI --------------------------------------------------------------
+const SectionTitle = ({ children }) => (
+  <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">
+    {children}
+  </h1>
+);
 
-const h1 = { fontSize: 28, margin: "0 0 8px" };
-const h2 = { fontSize: 20, margin: "0 0 12px", opacity: 0.85 };
-const btn = {
-  padding: "10px 14px",
-  borderRadius: 10,
-  border: "1px solid #111",
-  background: "#111",
-  color: "white",
-  cursor: "pointer",
-};
-const btnGhost = {
-  padding: "10px 14px",
-  borderRadius: 10,
-  border: "1px solid #ccc",
-  background: "white",
-  color: "#111",
-  cursor: "pointer",
-};
-const listBtn = (disabled) => ({
-  width: "100%",
-  textAlign: "left",
-  padding: "12px 14px",
-  borderRadius: 12,
-  border: "1px solid #e5e5e5",
-  background: disabled ? "#f3f3f3" : "white",
-  color: disabled ? "#999" : "#111",
-  cursor: disabled ? "not-allowed" : "pointer",
-});
+const SubText = ({ children }) => (
+  <p className="text-[#B3B3C0] text-sm sm:text-base">{children}</p>
+);
 
-const blackBox = {
-  width: "100%",
-  height: 220,
-  borderRadius: 16,
-  background: "#000",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  color: "#000", // keep text hidden until reveal
-  userSelect: "none",
-};
+const Card = ({ children, className = "" }) => (
+  <div
+    className={`max-w-xl mx-auto rounded-2xl border border-white/10 bg-white/5 p-5 shadow-xl ${className}`}
+  >
+    {children}
+  </div>
+);
 
-const revealText = { fontSize: 20, fontWeight: 600, textAlign: "center" };
-
-// --- Main App ---------------------------------------------------------------
 export default function App() {
   const [stage, setStage] = useState(STAGES.CONFIG);
 
   // Config
   const MIN = 3;
   const MAX = 12;
-  const [playerCount, setPlayerCount] = useState(3);
+  const [playerCount, setPlayerCount] = useState(6);
 
   // Core state
   const [players, setPlayers] = useState([]); // { index, role, revealed }
@@ -173,34 +137,28 @@ export default function App() {
     setStage(STAGES.PLAYERS); // effect will auto-advance to VOTING if all revealed
   };
 
-  const handleRevealResults = () => setStage(STAGES.RESULTS);
-
-  // Confirm new game (to avoid accidental taps)
+  // Confirm new game (avoid accidental taps)
   const handleNewGameConfirm = () => {
     const ok = window.confirm(
       "Start a new game? This will reset all progress."
     );
-    if (ok) {
-      window.location.reload();
-    }
+    if (ok) window.location.reload();
   };
+
+  const handleRevealResults = () => setStage(STAGES.RESULTS);
 
   // --- Screens --------------------------------------------------------------
   const renderConfig = () => (
-    <div style={card}>
-      <h1 style={h1}>Impostor Word Game</h1>
-      <h2 style={h2}>Configure players</h2>
+    <Card>
+      <SectionTitle>Impostor Word Game</SectionTitle>
+      <div className="mt-1" />
+      <SubText>
+        Set the number of players and start a local pass-and-play round.
+      </SubText>
 
-      <div
-        style={{
-          display: "flex",
-          gap: 12,
-          alignItems: "center",
-          marginBottom: 16,
-        }}
-      >
-        <label htmlFor="playerCount" style={{ fontWeight: 600 }}>
-          Players:
+      <div className="flex items-center gap-3 mt-5">
+        <label htmlFor="playerCount" className="font-medium">
+          Players
         </label>
         <input
           id="playerCount"
@@ -209,64 +167,60 @@ export default function App() {
           max={MAX}
           value={playerCount}
           onChange={(e) => setPlayerCount(Number(e.target.value))}
-          style={{
-            padding: 8,
-            width: 96,
-            borderRadius: 10,
-            border: "1px solid #ccc",
-          }}
+          className="w-24 rounded-xl border border-white/20 bg-white/10 px-3 py-2 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/30"
         />
-        <span style={{ opacity: 0.7 }}>
+        <span className="text-[#B3B3C0]">
           min {MIN}, max {MAX}
         </span>
       </div>
 
-      <button style={btn} onClick={startGame}>
+      <button
+        onClick={startGame}
+        className="mt-4 inline-flex items-center justify-center rounded-xl bg-white px-4 py-2 font-medium text-[#0B0C24] hover:bg-white/90 active:scale-[.99]"
+      >
         Start Game
       </button>
-      <p style={{ marginTop: 12, opacity: 0.7 }}>
-        Single-phone local play. Exactly one impostor.
-      </p>
-    </div>
+    </Card>
   );
 
   const renderPlayers = () => (
-    <div style={card}>
-      <h1 style={h1}>Select the active player</h1>
-      <p style={{ margin: "4px 0 16px", opacity: 0.75 }}>
+    <Card>
+      <SectionTitle>Select the active player</SectionTitle>
+      <div className="mt-1" />
+      <SubText>
         Pass the phone. The active player taps their number to privately reveal
         their role.
-      </p>
+      </SubText>
 
-      <div style={{ display: "grid", gap: 10 }}>
+      <div className="mt-5 grid gap-2">
         {players.map((p, i) => (
           <button
             key={p.index}
-            style={listBtn(p.revealed)}
             disabled={p.revealed}
             onClick={() => handlePickPlayer(i)}
+            className={`w-full text-left rounded-xl border px-4 py-3 transition ${
+              p.revealed
+                ? "border-white/10 bg-white/10 text-white/40 cursor-not-allowed"
+                : "border-white/10 bg-white/5 hover:bg-white/10"
+            }`}
           >
             Player {p.index}
           </button>
         ))}
       </div>
 
-      <div
-        style={{
-          marginTop: 16,
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <span style={{ opacity: 0.7 }}>
+      <div className="mt-4 flex items-center justify-between">
+        <span className="text-[#B3B3C0]">
           Revealed: {revealedCount}/{players.length}
         </span>
-        <button style={btnGhost} onClick={handleNewGameConfirm}>
+        <button
+          onClick={handleNewGameConfirm}
+          className="rounded-xl border border-white/20 bg-white/10 px-4 py-2 text-white hover:bg-white/15"
+        >
           New Game
         </button>
       </div>
-    </div>
+    </Card>
   );
 
   const renderReveal = () => {
@@ -275,11 +229,10 @@ export default function App() {
     const isImpostor = p.role === ROLES.IMPOSTOR;
 
     return (
-      <div style={{ ...card, textAlign: "center" }}>
-        <h1 style={h1}>Player {p.index}</h1>
-        <p style={{ margin: "4px 0 16px", opacity: 0.75 }}>
-          Tap the black box to reveal.
-        </p>
+      <Card className="text-center">
+        <SectionTitle>Player {p.index}</SectionTitle>
+        <div className="mt-1" />
+        <SubText>Tap the black box to reveal.</SubText>
 
         <div
           role="button"
@@ -289,14 +242,14 @@ export default function App() {
           onKeyDown={(e) =>
             (e.key === "Enter" || e.key === " ") && handleTapBlackBox()
           }
-          style={blackBox}
+          className="mt-4 flex h-56 w-full select-none items-center justify-center rounded-2xl bg-black"
         >
           {!showing ? null : (
-            <div style={{ color: "white", padding: 16 }}>
-              <div style={revealText}>
+            <div className="px-4 text-center text-white">
+              <div className="text-xl font-semibold">
                 {isImpostor ? impostorHint : secretWord}
               </div>
-              <div style={{ marginTop: 8, fontWeight: 500 }}>
+              <div className="mt-2 font-medium">
                 {isImpostor
                   ? "You are the Impostor. Blend in."
                   : "You are a Civilian."}
@@ -306,17 +259,21 @@ export default function App() {
         </div>
 
         <button
-          style={{ ...btn, marginTop: 16 }}
           onClick={handleGotIt}
           disabled={!showing}
+          className={`mt-4 inline-flex items-center justify-center rounded-xl px-4 py-2 font-medium transition ${
+            showing
+              ? "bg-white text-[#0B0C24] hover:bg-white/90"
+              : "bg-white/30 text-white/60 cursor-not-allowed"
+          }`}
         >
           Got it
         </button>
 
-        <p style={{ marginTop: 12, opacity: 0.7 }}>
+        <SubText>
           Pass the phone to the next player after tapping “Got it”.
-        </p>
-      </div>
+        </SubText>
+      </Card>
     );
   };
 
@@ -325,71 +282,117 @@ export default function App() {
     const starterLabel = `Player ${starterIdx + 1}`;
 
     return (
-      <div style={{ ...card }}>
-        <h1 style={h1}>Voting Phase</h1>
-        <p style={{ margin: "6px 0 12px", opacity: 0.8 }}>
-          The app randomly picked a starting player for this round.
-        </p>
-        <div
-          style={{
-            padding: 12,
-            border: "1px solid #eee",
-            borderRadius: 12,
-            marginBottom: 12,
-          }}
-        >
-          <strong>Starting Player:</strong> {starterLabel}
+      <div className="max-w-2xl mx-auto grid gap-4">
+        {/* Header */}
+        <div className="px-2">
+          <h1 className="text-3xl font-semibold">Voting Phase</h1>
+          <p className="text-[#B3B3C0] mt-1">Time to discuss and vote…</p>
         </div>
 
-        <div style={{ lineHeight: 1.6 }}>
-          <p style={{ fontWeight: 700, marginBottom: 8 }}>
-            🧩 Breakdown of Steps (How to Vote)
-          </p>
-          <ol style={{ paddingLeft: 18 }}>
-            <li style={{ marginBottom: 10 }}>
-              <strong>1. Starting Player</strong>
-              <ul style={{ marginTop: 6 }}>
-                <li>{starterLabel} begins the round.</li>
-                <li>This sets the order for who speaks first.</li>
-              </ul>
-            </li>
-            <li style={{ marginBottom: 10 }}>
-              <strong>2. Group Discussion</strong>
-              <ul style={{ marginTop: 6 }}>
-                <li>Players take turns clockwise discussing clues.</li>
-                <li>
-                  The goal: expose inconsistencies or hints that identify the
-                  impostor.
-                </li>
-              </ul>
-            </li>
-            <li style={{ marginBottom: 10 }}>
-              <strong>3. Vote Time</strong>
-              <ul style={{ marginTop: 6 }}>
-                <li>
-                  Each player says a word related to the secret (the clue word).
-                </li>
-                <li>
-                  The group may repeat this 2–3 times to gather more context.
-                </li>
-              </ul>
-            </li>
-            <li>
-              <strong>4. Reveal Phase</strong>
-              <ul style={{ marginTop: 6 }}>
-                <li>Everyone votes for who they think the impostor is.</li>
-                <li>
-                  After all votes are in, tap <em>Reveal Results</em> to see who
-                  was the impostor.
-                </li>
-              </ul>
-            </li>
-          </ol>
+        {/* Cards */}
+        <div className="grid gap-3">
+          {/* Card 1: Starting Player */}
+          <div
+            className="rounded-2xl p-4 text-white"
+            style={{ backgroundColor: "#0D284F" }}
+          >
+            <div className="flex items-start gap-3">
+              <div
+                className="h-8 w-8 rounded-full"
+                style={{ backgroundColor: "#007BFF" }}
+              />
+              <div>
+                <div className="font-semibold">1. Starting Player</div>
+                <ul className="mt-1 list-disc pl-5 text-sm text-white/90">
+                  <li>{starterLabel} begins the round.</li>
+                  <li>This sets the order for who speaks first.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {/* Card 2: Group Discussion */}
+          <div
+            className="rounded-2xl p-4 text-white"
+            style={{ backgroundColor: "#2E1A45" }}
+          >
+            <div className="flex items-start gap-3">
+              <div
+                className="h-8 w-8 rounded-full"
+                style={{ backgroundColor: "#8B5CF6" }}
+              />
+              <div>
+                <div className="font-semibold">2. Group Discussion</div>
+                <ul className="mt-1 list-disc pl-5 text-sm text-white/90">
+                  <li>Players take turns clockwise discussing clues.</li>
+                  <li>
+                    The goal: expose inconsistencies or hints that identify the
+                    impostor.
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {/* Card 3: Vote Time */}
+          <div
+            className="rounded-2xl p-4 text-white"
+            style={{ backgroundColor: "#3B2E1C" }}
+          >
+            <div className="flex items-start gap-3">
+              <div className="h-8 w-8" style={{ backgroundColor: "#FACC15" }} />
+              <div>
+                <div className="font-semibold">3. Vote Time</div>
+                <ul className="mt-1 list-disc pl-5 text-sm text-white/90">
+                  <li>
+                    Each player says a word related to the secret (the clue
+                    word).
+                  </li>
+                  <li>
+                    The group may repeat this 2–3 times to gather more context.
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {/* Card 4: Reveal Phase */}
+          <div
+            className="rounded-2xl p-4 text-white"
+            style={{ backgroundColor: "#3A1C26" }}
+          >
+            <div className="flex items-start gap-3">
+              <div
+                className="h-8 w-8 rounded-full"
+                style={{ backgroundColor: "#EF4444" }}
+              />
+              <div>
+                <div className="font-semibold">4. Reveal Phase</div>
+                <ul className="mt-1 list-disc pl-5 text-sm text-white/90">
+                  <li>Everyone votes for who they think the impostor is.</li>
+                  <li>
+                    After all votes are in, tap <em>Reveal Results</em> to see
+                    who was the impostor.
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div style={{ marginTop: 16, display: "flex", gap: 8 }}>
-          <button style={btn} onClick={handleRevealResults}>
+        {/* Actions */}
+        <div className="flex items-center gap-3 px-2">
+          <button
+            onClick={handleRevealResults}
+            className="inline-flex items-center justify-center rounded-xl border border-red-800 bg-red-700 px-4 py-2 font-medium text-white hover:bg-red-600 active:scale-[.99]"
+          >
             Reveal Results
+          </button>
+          <button
+            onClick={handleNewGameConfirm}
+            className="inline-flex items-center justify-center rounded-xl border border-white/20 bg-white/10 px-4 py-2 text-white hover:bg-white/15"
+          >
+            New Game
           </button>
         </div>
       </div>
@@ -400,17 +403,21 @@ export default function App() {
     const impostorLabel =
       impostorIndex != null ? `Player ${impostorIndex + 1}` : "Unknown";
     return (
-      <div style={{ ...card, textAlign: "center" }}>
-        <h1 style={h1}>Results</h1>
-        <p style={{ fontSize: 18, marginTop: 8 }}>
-          The impostor was: <strong>{impostorLabel}</strong>
+      <Card className="text-center">
+        <SectionTitle>Results</SectionTitle>
+        <p className="mt-2 text-lg">
+          The impostor was:{" "}
+          <span className="font-semibold">{impostorLabel}</span>
         </p>
-        <div style={{ marginTop: 16 }}>
-          <button style={btnGhost} onClick={() => window.location.reload()}>
+        <div className="mt-4 flex items-center justify-center gap-3">
+          <button
+            onClick={handleNewGameConfirm}
+            className="inline-flex items-center justify-center rounded-xl border border-white/20 bg-white/10 px-4 py-2 text-white hover:bg-white/15"
+          >
             New Game
           </button>
         </div>
-      </div>
+      </Card>
     );
   };
 
@@ -425,7 +432,10 @@ export default function App() {
   }, []);
 
   return (
-    <div style={{ padding: 12 }}>
+    <div
+      className="min-h-screen w-full px-4 py-6 text-white"
+      style={{ backgroundColor: "#0B0C24" }}
+    >
       {stage === STAGES.CONFIG && renderConfig()}
       {stage === STAGES.PLAYERS && renderPlayers()}
       {stage === STAGES.REVEAL && renderReveal()}
