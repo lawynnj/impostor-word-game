@@ -683,10 +683,10 @@ export default function App() {
           {/* Player Count Card */}
           <button
             onClick={() => navigate("/players")}
-            className="bg-[#0B0C24] rounded-2xl p-6 flex flex-col items-center text-center hover:bg-[#332B4A] transition-colors border-2 border-purple-500/10"
+            className="bg-[#2A2540] rounded-2xl p-6 flex flex-col items-center text-center hover:bg-[#332B4A] transition-colors border-2 border-purple-500/40"
           >
             {/* Icon Container */}
-            <div className="bg-[#1A1528] rounded-xl p-3 mb-4">
+            <div className="bg-linear-to-r from-[#9333EA] to-[#A855F7]  rounded-xl p-3 mb-4">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -708,10 +708,10 @@ export default function App() {
           {/* Impostor Count Card */}
           <button
             onClick={() => navigate("/impostors")}
-            className="bg-[#0B0C24] rounded-2xl p-6 flex flex-col items-center text-center hover:bg-[#332B4A] transition-colors border-2 border-purple-500/10"
+            className="bg-[#2A2540] rounded-2xl p-6 flex flex-col items-center text-center hover:bg-[#332B4A] transition-colors border-2 border-purple-500/40"
           >
             {/* Icon Container */}
-            <div className="bg-[#1A1528] rounded-xl p-3 mb-4">
+            <div className="bg-linear-to-r from-[#9333EA] to-[#A855F7] rounded-xl p-3 mb-4">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -818,7 +818,7 @@ export default function App() {
         {/* Start Game Button */}
         <button
           onClick={startGame}
-          className="w-full bg-linear-to-r from-[#9333EA] to-[#A855F7] rounded-xl py-4 px-6 text-white font-medium hover:opacity-90 active:scale-[.99] transition-all"
+          className="w-full bg-linear-to-r from-[#9333EA] to-[#581C87] rounded-xl py-4 px-6 text-white font-medium hover:opacity-90 active:scale-[.99] transition-all"
         >
           Start Game
         </button>
