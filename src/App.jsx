@@ -736,6 +736,7 @@ export default function App() {
         {/* Categories Section */}
         <div className="mb-6">
           <div className="flex items-center gap-2 mb-3">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 480" className="w-5 h-5"><path d="M120 120h120v120H120zM0 240h120v120H0zM120 360h120v120H120zM0 0h120v120H0zM360 120h120v120H360zM240 240h120v120H240zM360 360h120v120H360zM240 0h120v120H240z" fill="#808"></path></svg>
             <label className="font-medium text-white">Categories</label>
           </div>
           <button
