@@ -739,10 +739,10 @@ export default function App() {
                 fill="#A855F7"></path></svg>
             <label className="font-medium text-white">Categories</label>
           </div>
-          <div className="flex flex-col items-center gap-2 mb-3 border-2 border-purple-500/40">
+          <div className="flex flex-col rounded-2xl overflow-hidden border-2 border-purple-500/40 mb-3 divide-y divide-purple-500/40">
             <button
               onClick={() => navigate("/categories")}
-              className="w-full bg-[#2A2540] rounded-xl p-4 flex items-center justify-between hover:bg-[#332B4A] transition-colors"
+              className="w-full bg-[#2A2540] p-4 flex items-center justify-between hover:bg-[#332B4A] transition-colors"
             >
               <div className="text-left">
                 <div className="text-white font-medium">
@@ -767,7 +767,7 @@ export default function App() {
                 />
               </svg>
             </button>
-            <div className="w-full bg-[#2A2540] rounded-xl p-4 flex items-center justify-between">
+            <div className="w-full bg-[#2A2540] p-4 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
                   <path fill="#A855F7" d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z" />
@@ -793,7 +793,7 @@ export default function App() {
               </button>
             </div>
 
-            <div className="w-full bg-[#2A2540] rounded-xl p-4 flex items-center justify-between">
+            <div className="w-full bg-[#2A2540] p-4 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 88 88" className="w-5 h-5 text-white" fill="currentColor"><g data-name="Lamp Bulb">
                   <path fill="#A855F7" d="M44 13a15 15 0 1 0 15 15 15.016 15.016 0 0 0-15-15zm0 28a13 13 0 1 1 13-13 13.015 13.015 0 0 1-13 13z" />
