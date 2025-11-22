@@ -1,4 +1,5 @@
 import React from "react";
+import { motion } from "framer-motion";
 
 const GameScreen = ({
     players,
@@ -7,7 +8,13 @@ const GameScreen = ({
     handleNewGameConfirm,
 }) => {
     return (
-        <div className="max-w-2xl mx-auto">
+        <motion.div
+            className="max-w-2xl mx-auto"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -100 }}
+            transition={{ duration: 0.3 }}
+        >
             {/* Header with back (mapped to New Game confirm) */}
             <div className="flex items-center gap-2 mb-2">
                 <button
@@ -45,8 +52,8 @@ const GameScreen = ({
                             disabled={disabled}
                             onClick={() => handlePickPlayer(i)}
                             className={`group relative rounded-3xl p-0.5 transition ${disabled
-                                    ? "opacity-40 cursor-not-allowed"
-                                    : "hover:scale-[1.01] active:scale-[.99]"
+                                ? "opacity-40 cursor-not-allowed"
+                                : "hover:scale-[1.01] active:scale-[.99]"
                                 } bg-[conic-gradient(at_right,#3B82F6,#8B5CF6,#A855F7)]`}
                         >
                             <div className="rounded-3xl h-full w-full bg-[#0B0C24] p-4">
@@ -74,7 +81,7 @@ const GameScreen = ({
                     Revealed: {revealedCount}/{players.length}
                 </span>
             </div>
-        </div>
+        </motion.div>
     );
 };
 

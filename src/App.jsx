@@ -6,6 +6,7 @@ import {
   useParams,
   useLocation,
 } from "react-router-dom";
+import { AnimatePresence } from "framer-motion";
 
 import "./App.css";
 import { WORD_PAIRS } from "./wordPairs";
@@ -246,91 +247,93 @@ export default function App() {
 
   return (
     <div
-      className="min-h-screen w-full px-4 py-6 text-white"
+      className="min-h-screen w-full px-4 py-6 text-white overflow-x-hidden"
       style={{ backgroundColor: "#0B0C24" }}
     >
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <ConfigScreen
-              playerCount={playerCount}
-              impostorCount={impostorCount}
-              enabledCategories={enabledCategories}
-              displayCategory={displayCategory}
-              setDisplayCategory={setDisplayCategory}
-              displayImpostorHint={displayImpostorHint}
-              setDisplayImpostorHint={setDisplayImpostorHint}
-              startGame={startGame}
-              navigate={navigate}
-            />
-          }
-        />
-        <Route
-          path="/categories"
-          element={
-            <CategorySelection
-              enabledCategories={enabledCategories}
-              setEnabledCategories={setEnabledCategories}
-              navigate={navigate}
-            />
-          }
-        />
-        <Route
-          path="/players"
-          element={
-            <PlayerCountSelection
-              playerCount={playerCount}
-              setPlayerCount={setPlayerCount}
-              impostorCount={impostorCount}
-              setImpostorCount={setImpostorCount}
-              navigate={navigate}
-            />
-          }
-        />
-        <Route
-          path="/impostors"
-          element={
-            <ImpostorCountSelection
-              impostorCount={impostorCount}
-              setImpostorCount={setImpostorCount}
-              playerCount={playerCount}
-              navigate={navigate}
-            />
-          }
-        />
-        <Route
-          path="/game"
-          element={
-            <GameScreen
-              players={players}
-              handlePickPlayer={handlePickPlayer}
-              revealedCount={revealedCount}
-              handleNewGameConfirm={handleNewGameConfirm}
-            />
-          }
-        />
-        <Route path="/reveal/:playerIndex" element={<RevealRoute />} />
-        <Route
-          path="/voting"
-          element={
-            <VotingScreen
-              startingPlayerIndex={startingPlayerIndex}
-              handleRevealResults={handleRevealResults}
-              handleNewGameConfirm={handleNewGameConfirm}
-            />
-          }
-        />
-        <Route
-          path="/results"
-          element={
-            <ResultsScreen
-              impostorIndices={impostorIndices}
-              handleNewGameConfirm={handleNewGameConfirm}
-            />
-          }
-        />
-      </Routes>
+      <AnimatePresence mode="wait">
+        <Routes location={location} key={location.pathname}>
+          <Route
+            path="/"
+            element={
+              <ConfigScreen
+                playerCount={playerCount}
+                impostorCount={impostorCount}
+                enabledCategories={enabledCategories}
+                displayCategory={displayCategory}
+                setDisplayCategory={setDisplayCategory}
+                displayImpostorHint={displayImpostorHint}
+                setDisplayImpostorHint={setDisplayImpostorHint}
+                startGame={startGame}
+                navigate={navigate}
+              />
+            }
+          />
+          <Route
+            path="/categories"
+            element={
+              <CategorySelection
+                enabledCategories={enabledCategories}
+                setEnabledCategories={setEnabledCategories}
+                navigate={navigate}
+              />
+            }
+          />
+          <Route
+            path="/players"
+            element={
+              <PlayerCountSelection
+                playerCount={playerCount}
+                setPlayerCount={setPlayerCount}
+                impostorCount={impostorCount}
+                setImpostorCount={setImpostorCount}
+                navigate={navigate}
+              />
+            }
+          />
+          <Route
+            path="/impostors"
+            element={
+              <ImpostorCountSelection
+                impostorCount={impostorCount}
+                setImpostorCount={setImpostorCount}
+                playerCount={playerCount}
+                navigate={navigate}
+              />
+            }
+          />
+          <Route
+            path="/game"
+            element={
+              <GameScreen
+                players={players}
+                handlePickPlayer={handlePickPlayer}
+                revealedCount={revealedCount}
+                handleNewGameConfirm={handleNewGameConfirm}
+              />
+            }
+          />
+          <Route path="/reveal/:playerIndex" element={<RevealRoute />} />
+          <Route
+            path="/voting"
+            element={
+              <VotingScreen
+                startingPlayerIndex={startingPlayerIndex}
+                handleRevealResults={handleRevealResults}
+                handleNewGameConfirm={handleNewGameConfirm}
+              />
+            }
+          />
+          <Route
+            path="/results"
+            element={
+              <ResultsScreen
+                impostorIndices={impostorIndices}
+                handleNewGameConfirm={handleNewGameConfirm}
+              />
+            }
+          />
+        </Routes>
+      </AnimatePresence>
       {/* Global Modals */}
       <ConfirmationModal
         isOpen={isNewGameModalOpen}
