@@ -9,6 +9,7 @@ import {
 
 import "./App.css";
 import { WORD_PAIRS } from "./wordPairs";
+import ConfirmationModal from "./ConfirmationModal";
 
 const ROLES = {
   CIVILIAN: "CIVILIAN",
@@ -264,6 +265,7 @@ export default function App() {
 
   // Flow state
   const [startingPlayerIndex, setStartingPlayerIndex] = useState(null); // for Voting phase
+  const [isNewGameModalOpen, setIsNewGameModalOpen] = useState(false);
   const revealContainerRef = useRef(null);
 
   // Derived
@@ -380,21 +382,26 @@ export default function App() {
   };
 
   // Confirm new game (avoid accidental taps)
+  // Confirm new game (avoid accidental taps)
   const handleNewGameConfirm = () => {
-    const ok = window.confirm(
-      "Start a new game? This will reset all progress."
-    );
-    if (ok) {
-      // Reset all game state
-      setPlayers([]);
-      setImpostorIndices([]);
-      setSecretWord("");
-      setImpostorHint("");
-      setCategory("");
-      setStartingPlayerIndex(null);
-      // Navigate to config screen
-      navigate("/");
-    }
+    setIsNewGameModalOpen(true);
+  };
+
+  const confirmNewGame = () => {
+    // Reset all game state
+    setPlayers([]);
+    setImpostorIndices([]);
+    setSecretWord("");
+    setImpostorHint("");
+    setCategory("");
+    setStartingPlayerIndex(null);
+    setIsNewGameModalOpen(false);
+    // Navigate to config screen
+    navigate("/");
+  };
+
+  const cancelNewGame = () => {
+    setIsNewGameModalOpen(false);
   };
 
   const handleRevealResults = () => navigate("/results");
@@ -1219,6 +1226,14 @@ export default function App() {
         <Route path="/voting" element={<VotingRoute />} />
         <Route path="/results" element={<ResultsRoute />} />
       </Routes>
+      {/* Global Modals */}
+      <ConfirmationModal
+        isOpen={isNewGameModalOpen}
+        onConfirm={confirmNewGame}
+        onCancel={cancelNewGame}
+        title="Start New Game?"
+        message="Are you sure you want to start a new game? This will reset all current progress."
+      />
     </div>
   );
 }
