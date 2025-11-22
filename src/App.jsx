@@ -767,64 +767,62 @@ export default function App() {
                 />
               </svg>
             </button>
-            <div className="mb-6 space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
-                    <path fill="#A855F7" d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z" />
-                    <path fill="#A855F7" d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0" />
-                  </svg>
-                  <label htmlFor="displayCategory" className="font-medium text-white">
-                    Show Category to Imposter
-                  </label>
-                </div>
-                <button
-                  id="displayCategory"
-                  type="button"
-                  role="switch"
-                  aria-checked={displayCategory}
-                  onClick={() => setDisplayCategory(!displayCategory)}
-                  className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-white/30 focus:ring-offset-2 focus:ring-offset-[#0B0C24] ${displayCategory ? "bg-[#A855F7]" : "bg-white/20"
-                    }`}
-                >
-                  <span
-                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out ${displayCategory ? "translate-x-5" : "translate-x-0"
-                      }`}
-                  />
-                </button>
+            <div className="w-full bg-[#2A2540] rounded-xl p-4 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
+                  <path fill="#A855F7" d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z" />
+                  <path fill="#A855F7" d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0" />
+                </svg>
+                <label htmlFor="displayCategory" className="font-medium text-white">
+                  Show Category to Imposter
+                </label>
               </div>
+              <button
+                id="displayCategory"
+                type="button"
+                role="switch"
+                aria-checked={displayCategory}
+                onClick={() => setDisplayCategory(!displayCategory)}
+                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-white/30 focus:ring-offset-2 focus:ring-offset-[#0B0C24] ${displayCategory ? "bg-[#A855F7]" : "bg-white/20"
+                  }`}
+              >
+                <span
+                  className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out ${displayCategory ? "translate-x-5" : "translate-x-0"
+                    }`}
+                />
+              </button>
+            </div>
 
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 88 88" className="w-5 h-5 text-white" fill="currentColor"><g data-name="Lamp Bulb">
-                    <path fill="#A855F7" d="M44 13a15 15 0 1 0 15 15 15.016 15.016 0 0 0-15-15zm0 28a13 13 0 1 1 13-13 13.015 13.015 0 0 1-13 13z" />
-                    <path fill="#A855F7" d="M44 9a19 19 0 1 0 19 19A19.022 19.022 0 0 0 44 9zm0 36a17 17 0 1 1 17-17 17.019 17.019 0 0 1-17 17z" />
-                    <path fill="#A855F7" d="M47 24a1 1 0 0 0 2 0 4.004 4.004 0 0 0-4-4v-1a1 1 0 0 0-2 0v1a4.004 4.004 0 0 0-4 4v.145a3.979 3.979 0 0 0 2.21 3.579l1.79.894V34a2.003 2.003 0 0 1-2-2 1 1 0 0 0-2 0 4.004 4.004 0 0 0 4 4v1a1 1 0 0 0 2 0v-1a4.004 4.004 0 0 0 4-4v-.145a3.979 3.979 0 0 0-2.21-3.579L45 27.382V22a2.003 2.003 0 0 1 2 2zm-1.105 6.065A1.99 1.99 0 0 1 47 31.855V32a2.003 2.003 0 0 1-2 2v-4.382zM43 26.382l-.894-.447A1.99 1.99 0 0 1 41 24.145V24a2.003 2.003 0 0 1 2-2z" />
-                    <path fill="#A855F7" d="M44 1a28.003 28.003 0 0 0-15 51.648v4.494a3.984 3.984 0 0 0-2.313 6.097 3.975 3.975 0 0 0 0 7.522A3.998 3.998 0 0 0 30 77h6v2a8 8 0 0 0 16 0v-2h6a3.998 3.998 0 0 0 3.313-6.24 3.975 3.975 0 0 0 0-7.52A3.984 3.984 0 0 0 59 57.141v-4.495A28.003 28.003 0 0 0 44 1zm6 78a6 6 0 0 1-12 0v-2h12zm8-4H30a2 2 0 0 1 0-4h28a2 2 0 0 1 0 4zm4-8a2.003 2.003 0 0 1-2 2H28a2 2 0 0 1 0-4h32a2.003 2.003 0 0 1 2 2zm-2-6a2.003 2.003 0 0 1-2 2H30a2 2 0 0 1 0-4h28a2.003 2.003 0 0 1 2 2zm-2.52-9.763a1 1 0 0 0-.48.855V57H31v-4.908a1 1 0 0 0-.48-.855 26 26 0 1 1 26.961 0z" />
-                    <path fill="#A855F7" d="M85 27h-9a1 1 0 0 0 0 2h9a1 1 0 0 0 0-2zM76.625 22.781l5-4a1 1 0 1 0-1.25-1.562l-5 4a1 1 0 0 0 1.25 1.562zM76.625 33.219a1 1 0 0 0-1.25 1.562l5 4a1 1 0 1 0 1.25-1.562zM12 27H3a1 1 0 0 0 0 2h9a1 1 0 0 0 0-2zM11.375 22.781a1 1 0 1 0 1.25-1.562l-5-4a1 1 0 0 0-1.25 1.562zM11.375 33.219l-5 4a1 1 0 0 0 1.25 1.562l5-4a1 1 0 1 0-1.25-1.562z" />
-                  </g></svg>
-                  <label
-                    htmlFor="displayImpostorHint"
-                    className="font-medium text-white"
-                  >
-                    Show Hint to Imposter
-                  </label>
-                </div>
-                <button
-                  id="displayImpostorHint"
-                  type="button"
-                  role="switch"
-                  aria-checked={displayImpostorHint}
-                  onClick={() => setDisplayImpostorHint(!displayImpostorHint)}
-                  className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-white/30 focus:ring-offset-2 focus:ring-offset-[#0B0C24] ${displayImpostorHint ? "bg-[#A855F7]" : "bg-white/20"
-                    }`}
+            <div className="w-full bg-[#2A2540] rounded-xl p-4 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 88 88" className="w-5 h-5 text-white" fill="currentColor"><g data-name="Lamp Bulb">
+                  <path fill="#A855F7" d="M44 13a15 15 0 1 0 15 15 15.016 15.016 0 0 0-15-15zm0 28a13 13 0 1 1 13-13 13.015 13.015 0 0 1-13 13z" />
+                  <path fill="#A855F7" d="M44 9a19 19 0 1 0 19 19A19.022 19.022 0 0 0 44 9zm0 36a17 17 0 1 1 17-17 17.019 17.019 0 0 1-17 17z" />
+                  <path fill="#A855F7" d="M47 24a1 1 0 0 0 2 0 4.004 4.004 0 0 0-4-4v-1a1 1 0 0 0-2 0v1a4.004 4.004 0 0 0-4 4v.145a3.979 3.979 0 0 0 2.21 3.579l1.79.894V34a2.003 2.003 0 0 1-2-2 1 1 0 0 0-2 0 4.004 4.004 0 0 0 4 4v1a1 1 0 0 0 2 0v-1a4.004 4.004 0 0 0 4-4v-.145a3.979 3.979 0 0 0-2.21-3.579L45 27.382V22a2.003 2.003 0 0 1 2 2zm-1.105 6.065A1.99 1.99 0 0 1 47 31.855V32a2.003 2.003 0 0 1-2 2v-4.382zM43 26.382l-.894-.447A1.99 1.99 0 0 1 41 24.145V24a2.003 2.003 0 0 1 2-2z" />
+                  <path fill="#A855F7" d="M44 1a28.003 28.003 0 0 0-15 51.648v4.494a3.984 3.984 0 0 0-2.313 6.097 3.975 3.975 0 0 0 0 7.522A3.998 3.998 0 0 0 30 77h6v2a8 8 0 0 0 16 0v-2h6a3.998 3.998 0 0 0 3.313-6.24 3.975 3.975 0 0 0 0-7.52A3.984 3.984 0 0 0 59 57.141v-4.495A28.003 28.003 0 0 0 44 1zm6 78a6 6 0 0 1-12 0v-2h12zm8-4H30a2 2 0 0 1 0-4h28a2 2 0 0 1 0 4zm4-8a2.003 2.003 0 0 1-2 2H28a2 2 0 0 1 0-4h32a2.003 2.003 0 0 1 2 2zm-2-6a2.003 2.003 0 0 1-2 2H30a2 2 0 0 1 0-4h28a2.003 2.003 0 0 1 2 2zm-2.52-9.763a1 1 0 0 0-.48.855V57H31v-4.908a1 1 0 0 0-.48-.855 26 26 0 1 1 26.961 0z" />
+                  <path fill="#A855F7" d="M85 27h-9a1 1 0 0 0 0 2h9a1 1 0 0 0 0-2zM76.625 22.781l5-4a1 1 0 1 0-1.25-1.562l-5 4a1 1 0 0 0 1.25 1.562zM76.625 33.219a1 1 0 0 0-1.25 1.562l5 4a1 1 0 1 0 1.25-1.562zM12 27H3a1 1 0 0 0 0 2h9a1 1 0 0 0 0-2zM11.375 22.781a1 1 0 1 0 1.25-1.562l-5-4a1 1 0 0 0-1.25 1.562zM11.375 33.219l-5 4a1 1 0 0 0 1.25 1.562l5-4a1 1 0 1 0-1.25-1.562z" />
+                </g></svg>
+                <label
+                  htmlFor="displayImpostorHint"
+                  className="font-medium text-white"
                 >
-                  <span
-                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out ${displayImpostorHint ? "translate-x-5" : "translate-x-0"
-                      }`}
-                  />
-                </button>
+                  Show Hint to Imposter
+                </label>
               </div>
+              <button
+                id="displayImpostorHint"
+                type="button"
+                role="switch"
+                aria-checked={displayImpostorHint}
+                onClick={() => setDisplayImpostorHint(!displayImpostorHint)}
+                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-white/30 focus:ring-offset-2 focus:ring-offset-[#0B0C24] ${displayImpostorHint ? "bg-[#A855F7]" : "bg-white/20"
+                  }`}
+              >
+                <span
+                  className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out ${displayImpostorHint ? "translate-x-5" : "translate-x-0"
+                    }`}
+                />
+              </button>
             </div>
           </div>
           {/* Toggle Settings */}
@@ -838,7 +836,7 @@ export default function App() {
         >
           Start Game
         </button>
-      </div>
+      </div >
     );
   };
 
