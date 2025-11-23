@@ -211,7 +211,7 @@ export default function App() {
       className="min-h-screen w-full px-4 py-6 text-white overflow-x-hidden"
       style={{ backgroundColor: "#0B0C24" }}
     >
-      <AnimatePresence mode="popLayout">
+      <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
           <Route
             path="/"

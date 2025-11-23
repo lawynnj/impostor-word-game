@@ -18,9 +18,11 @@ const RevealScreen = ({
     const { playerIndex: playerIndexParam } = useParams();
     const playerIndex = playerIndexParam ? parseInt(playerIndexParam, 10) : null;
     const [showing, setShowing] = useState(false);
+    const [navigating, setNavigating] = useState(false);
 
     useEffect(() => {
         setShowing(false);
+        setNavigating(false);
     }, [playerIndex]);
 
     const revealContainerRef = useRef(null);
@@ -31,6 +33,13 @@ const RevealScreen = ({
 
     const handleTapBlackBox = () => setShowing(true);
 
+    const handleGotItClick = () => {
+        setNavigating(true);
+        handleGotIt(playerIndex);
+    };
+
+    // Hide component if navigating
+    if (navigating) return null;
 
     const disabled = true;
     const Component = disabled ? "div" : motion.div;
@@ -145,7 +154,7 @@ const RevealScreen = ({
                 ) : null}
 
                 <button
-                    onClick={() => handleGotIt(playerIndex)}
+                    onClick={handleGotItClick}
                     disabled={!showing}
                     className={`mt-6 w-full inline-flex items-center justify-center rounded-xl px-4 py-3 font-medium transition ${showing
                         ? "bg-linear-to-r from-[#9333EA] to-[#A855F7] text-white hover:opacity-90"
