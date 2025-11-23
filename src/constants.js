@@ -10,4 +10,5 @@ export const CATEGORY_DISPLAY_NAMES = {
   animals: "Animals",
   object: "Objects",
   movies: "Movies",
+  nba: "NBA Players",
 };
