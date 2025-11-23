@@ -19,7 +19,7 @@ const GameScreen = ({
 
     return (
         <Component
-            className="max-w-2xl mx-auto"
+            className="max-w-2xl mx-auto w-full"
             {...motionProps}
         >
             {/* Header with back (mapped to New Game confirm) */}

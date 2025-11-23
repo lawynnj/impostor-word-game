@@ -42,7 +42,7 @@ const RevealScreen = ({
     };
 
     return (
-        <Component {...motionProps}>
+        <Component {...motionProps} className="w-full">
             <Card className="text-center">
                 <div className="text-center">
                     <h1 className="text-sm sm:text-base">
