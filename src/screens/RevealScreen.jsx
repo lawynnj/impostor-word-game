@@ -1,4 +1,5 @@
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Card } from "../components/ui/Card";
 import { SectionTitle } from "../components/ui/SectionTitle";
@@ -6,7 +7,6 @@ import AnimatedDots from "../components/AnimatedDots";
 import { ROLES } from "../constants";
 
 const RevealScreen = ({
-    playerIndex,
     players,
     displayCategory,
     category,
@@ -14,9 +14,15 @@ const RevealScreen = ({
     displayImpostorHint,
     impostorHint,
     handleGotIt,
-    showing,
-    setShowing,
 }) => {
+    const { playerIndex: playerIndexParam } = useParams();
+    const playerIndex = playerIndexParam ? parseInt(playerIndexParam, 10) : null;
+    const [showing, setShowing] = useState(false);
+
+    useEffect(() => {
+        setShowing(false);
+    }, [playerIndex]);
+
     const revealContainerRef = useRef(null);
 
     if (playerIndex == null || !players[playerIndex]) return null;

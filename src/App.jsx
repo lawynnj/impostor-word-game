@@ -24,40 +24,7 @@ import RevealScreen from "./screens/RevealScreen";
 import VotingScreen from "./screens/VotingScreen";
 import ResultsScreen from "./screens/ResultsScreen";
 
-const RevealGameRoute = ({
-  players,
-  displayCategory,
-  category,
-  secretWord,
-  displayImpostorHint,
-  impostorHint,
-  handleGotIt,
-}) => {
-  const { playerIndex: playerIndexParam } = useParams();
-  const playerIndex = playerIndexParam ? parseInt(playerIndexParam, 10) : null;
 
-  // Local state for showing - resets when route changes
-  const [showing, setShowing] = useState(false);
-
-  useEffect(() => {
-    setShowing(false);
-  }, [playerIndex]);
-
-  return (
-    <RevealScreen
-      playerIndex={playerIndex}
-      players={players}
-      displayCategory={displayCategory}
-      category={category}
-      secretWord={secretWord}
-      displayImpostorHint={displayImpostorHint}
-      impostorHint={impostorHint}
-      handleGotIt={handleGotIt}
-      showing={showing}
-      setShowing={setShowing}
-    />
-  );
-};
 
 export default function App() {
   const navigate = useNavigate();
@@ -323,7 +290,7 @@ export default function App() {
           <Route
             path="/reveal/:playerIndex"
             element={
-              <RevealGameRoute
+              <RevealScreen
                 players={players}
                 displayCategory={displayCategory}
                 category={category}
