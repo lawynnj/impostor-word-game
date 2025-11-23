@@ -25,13 +25,18 @@ const RevealScreen = ({
 
     const handleTapBlackBox = () => setShowing(true);
 
+
+    const disabled = true;
+    const Component = disabled ? "div" : motion.div;
+    const motionProps = disabled ? {} : {
+        initial: { opacity: 0, x: -20 },
+        animate: { opacity: 1, x: 0 },
+        exit: { opacity: 0, x: -100 },
+        transition: { duration: 0.3 }
+    };
+
     return (
-        <motion.div
-            initial={{ opacity: 0, x: 100 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 100 }}
-            transition={{ duration: 0.3 }}
-        >
+        <Component {...motionProps}>
             <Card className="text-center">
                 <div className="text-center">
                     <h1 className="text-sm sm:text-base">
@@ -144,7 +149,7 @@ const RevealScreen = ({
                     Got it!
                 </button>
             </Card>
-        </motion.div>
+        </Component>
     );
 };
 

@@ -7,13 +7,20 @@ const GameScreen = ({
     revealedCount,
     handleNewGameConfirm,
 }) => {
+
+    const disabled = false;
+    const Component = disabled ? "div" : motion.div;
+    const motionProps = disabled ? {} : {
+        initial: { opacity: 0, x: -20 },
+        animate: { opacity: 1, x: 0 },
+        exit: { opacity: 0, x: -100 },
+        transition: { duration: 0.3 }
+    };
+
     return (
-        <motion.div
+        <Component
             className="max-w-2xl mx-auto"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -100 }}
-            transition={{ duration: 0.3 }}
+            {...motionProps}
         >
             {/* Header with back (mapped to New Game confirm) */}
             <div className="flex items-center gap-2 mb-2">
@@ -81,7 +88,7 @@ const GameScreen = ({
                     Revealed: {revealedCount}/{players.length}
                 </span>
             </div>
-        </motion.div>
+        </Component>
     );
 };
 
