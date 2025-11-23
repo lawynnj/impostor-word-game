@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useMemo, useState, useEffect, useCallback } from "react";
 import {
   Routes,
   Route,
@@ -36,27 +36,13 @@ export default function App() {
 
   // Initialize settings from localStorage using lazy initialization
   // Load once and use for all settings
-  const [playerCount, setPlayerCount] = useState(() => {
-    const settings = loadSettingsFromStorage();
-    return settings.playerCount;
-  });
-  // Display category
-  const [displayCategory, setDisplayCategory] = useState(() => {
-    const settings = loadSettingsFromStorage();
-    return settings.displayCategory;
-  });
-  const [displayImpostorHint, setDisplayImpostorHint] = useState(() => {
-    const settings = loadSettingsFromStorage();
-    return settings.displayImpostorHint;
-  });
-  const [enabledCategories, setEnabledCategories] = useState(() => {
-    const settings = loadSettingsFromStorage();
-    return settings.enabledCategories;
-  });
-  const [impostorCount, setImpostorCount] = useState(() => {
-    const settings = loadSettingsFromStorage();
-    return settings.impostorCount;
-  });
+  const [initialSettings] = useState(() => loadSettingsFromStorage());
+
+  const [playerCount, setPlayerCount] = useState(initialSettings.playerCount);
+  const [displayCategory, setDisplayCategory] = useState(initialSettings.displayCategory);
+  const [displayImpostorHint, setDisplayImpostorHint] = useState(initialSettings.displayImpostorHint);
+  const [enabledCategories, setEnabledCategories] = useState(initialSettings.enabledCategories);
+  const [impostorCount, setImpostorCount] = useState(initialSettings.impostorCount);
 
   // Core state
   const [players, setPlayers] = useState([]); // { index, role, revealed }
@@ -116,7 +102,7 @@ export default function App() {
   }, [impostorCount]);
 
   // --- Actions --------------------------------------------------------------
-  const startGame = () => {
+  const startGame = useCallback(() => {
     if (playerCount < MIN || playerCount > MAX) {
       alert(`Player count must be between ${MIN} and ${MAX}.`);
       return;
@@ -163,14 +149,14 @@ export default function App() {
     setImpostorIndices(selectedIndices);
     setStartingPlayerIndex(null);
     navigate("/game");
-  };
+  }, [playerCount, impostorCount, enabledCategories, navigate, MIN, MAX]);
 
-  const handlePickPlayer = (i) => {
+  const handlePickPlayer = useCallback((i) => {
     if (players[i].revealed) return;
     navigate(`/reveal/${i}`);
-  };
+  }, [players, navigate]);
 
-  const handleGotIt = (playerIndex) => {
+  const handleGotIt = useCallback((playerIndex) => {
     if (playerIndex == null) return;
 
     setPlayers((prev) => {
@@ -180,14 +166,14 @@ export default function App() {
     });
 
     navigate("/game"); // effect will auto-advance to VOTING if all revealed
-  };
+  }, [navigate]);
 
   // Confirm new game (avoid accidental taps)
-  const handleNewGameConfirm = () => {
+  const handleNewGameConfirm = useCallback(() => {
     setIsNewGameModalOpen(true);
-  };
+  }, []);
 
-  const confirmNewGame = () => {
+  const confirmNewGame = useCallback(() => {
     // Reset all game state
     setPlayers([]);
     setImpostorIndices([]);
@@ -198,13 +184,13 @@ export default function App() {
     setIsNewGameModalOpen(false);
     // Navigate to config screen
     navigate("/");
-  };
+  }, [navigate]);
 
-  const cancelNewGame = () => {
+  const cancelNewGame = useCallback(() => {
     setIsNewGameModalOpen(false);
-  };
+  }, []);
 
-  const handleRevealResults = () => navigate("/results");
+  const handleRevealResults = useCallback(() => navigate("/results"), [navigate]);
 
   // --- Route Components ------------------------------------------------------
 
@@ -218,7 +204,7 @@ export default function App() {
     history.pushState(null, "", location.href);
     window.addEventListener("popstate", onPop);
     return () => window.removeEventListener("popstate", onPop);
-  }, []);
+  }, [location.href]);
 
   return (
     <div
