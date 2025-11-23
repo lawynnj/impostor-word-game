@@ -20,8 +20,8 @@ const VotingScreen = ({
             <div className="grid gap-3">
                 {/* Card 1: Starting Player */}
                 <div
-                    className="rounded-2xl p-4 text-white"
-                    style={{ backgroundColor: "#0D284F" }}
+                    className="rounded-2xl p-4 text-white border"
+                    style={{ backgroundColor: "#0D284F", borderColor: "#007BFF" }}
                 >
                     <div className="flex items-start gap-3">
                         <div
@@ -40,8 +40,8 @@ const VotingScreen = ({
 
                 {/* Card 2: Group Discussion */}
                 <div
-                    className="rounded-2xl p-4 text-white"
-                    style={{ backgroundColor: "#2E1A45" }}
+                    className="rounded-2xl p-4 text-white border"
+                    style={{ backgroundColor: "#2E1A45", borderColor: "#8B5CF6" }}
                 >
                     <div className="flex items-start gap-3">
                         <div
@@ -63,8 +63,8 @@ const VotingScreen = ({
 
                 {/* Card 3: Vote Time */}
                 <div
-                    className="rounded-2xl p-4 text-white"
-                    style={{ backgroundColor: "#3B2E1C" }}
+                    className="rounded-2xl p-4 text-white border"
+                    style={{ backgroundColor: "#3B2E1C", borderColor: "#FACC15" }}
                 >
                     <div className="flex items-start gap-3">
                         <div className="h-8 w-8" style={{ backgroundColor: "#FACC15" }} />
@@ -84,8 +84,8 @@ const VotingScreen = ({
 
                 {/* Card 4: Reveal Phase */}
                 <div
-                    className="rounded-2xl p-4 text-white"
-                    style={{ backgroundColor: "#3A1C26" }}
+                    className="rounded-2xl p-4 text-white border"
+                    style={{ backgroundColor: "#3A1C26", borderColor: "#EF4444" }}
                 >
                     <div className="flex items-start gap-3">
                         <div
