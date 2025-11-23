@@ -1,4 +1,5 @@
 import React from "react";
+import { motion } from "framer-motion";
 import personIcon from "../assets/person-svgrepo-com.svg";
 import groupIcon from "../assets/Group_of_users_silhouette.svg";
 import voteIcon from "../assets/vote.svg";
@@ -12,8 +13,20 @@ const VotingScreen = ({
     const starterIdx = startingPlayerIndex != null ? startingPlayerIndex : 0;
     const starterLabel = `Player ${starterIdx + 1}`;
 
+    const disabled = false;
+    const Component = disabled ? "div" : motion.div;
+    const motionProps = disabled ? {} : {
+        initial: { opacity: 0, x: -20 },
+        animate: { opacity: 1, x: 0 },
+        exit: { opacity: 0, x: -100 },
+        transition: { duration: 0.15 }
+    };
+
     return (
-        <div className="max-w-2xl mx-auto grid gap-4">
+        <Component
+            className="max-w-2xl mx-auto grid gap-4"
+            {...motionProps}
+        >
             {/* Header */}
             <div className="px-2">
                 <h1 className="text-3xl font-semibold">Voting Phase</h1>
@@ -113,7 +126,7 @@ const VotingScreen = ({
             >
                 Reveal Results
             </button>
-        </div>
+        </Component>
     );
 };
 
