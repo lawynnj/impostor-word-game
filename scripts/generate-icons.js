@@ -17,7 +17,7 @@ const createIcon = async (size, svgPath, outputPath) => {
 
 const generateIcons = async () => {
   const publicDir = join(process.cwd(), "public");
-  const svgPath = join(publicDir, "icon.svg");
+  const svgPath = join(publicDir, "icon-2.svg");
 
   await createIcon(180, svgPath, join(publicDir, "pwa-180x180.png"));
   await createIcon(192, svgPath, join(publicDir, "pwa-192x192.png"));
