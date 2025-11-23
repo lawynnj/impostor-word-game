@@ -24,10 +24,7 @@ const VotingScreen = ({
                     style={{ backgroundColor: "#0D284F", borderColor: "#007BFF" }}
                 >
                     <div className="flex items-start gap-3">
-                        <div
-                            className="h-8 w-8 rounded-full"
-                            style={{ backgroundColor: "#007BFF" }}
-                        />
+                        <img src="/src/assets/person-svgrepo-com.svg" alt="Player" className="h-8 w-8" style={{ filter: "brightness(0) saturate(100%) invert(47%) sepia(96%) saturate(2534%) hue-rotate(198deg) brightness(102%) contrast(101%)" }} />
                         <div>
                             <div className="font-semibold">1. Starting Player</div>
                             <ul className="mt-1 list-disc pl-5 text-sm text-white/90">
@@ -44,10 +41,7 @@ const VotingScreen = ({
                     style={{ backgroundColor: "#2E1A45", borderColor: "#8B5CF6" }}
                 >
                     <div className="flex items-start gap-3">
-                        <div
-                            className="h-8 w-8 rounded-full"
-                            style={{ backgroundColor: "#8B5CF6" }}
-                        />
+                        <img src="/src/assets/Group_of_users_silhouette.svg" alt="Player" className="h-8 w-8" style={{ filter: "brightness(0) saturate(100%) invert(47%) sepia(96%) saturate(2534%) hue-rotate(198deg) brightness(102%) contrast(101%)", }} />
                         <div>
                             <div className="font-semibold">2. Group Discussion</div>
                             <ul className="mt-1 list-disc pl-5 text-sm text-white/90">
@@ -67,7 +61,7 @@ const VotingScreen = ({
                     style={{ backgroundColor: "#3B2E1C", borderColor: "#FACC15" }}
                 >
                     <div className="flex items-start gap-3">
-                        <div className="h-8 w-8" style={{ backgroundColor: "#FACC15" }} />
+                        <img src="/src/assets/vote.svg" alt="Player" className="h-8 w-8" style={{ filter: "brightness(0) saturate(100%) invert(87%) sepia(61%) saturate(542%) hue-rotate(359deg) brightness(102%) contrast(98%)" }} />
                         <div>
                             <div className="font-semibold">3. Vote Time</div>
                             <ul className="mt-1 list-disc pl-5 text-sm text-white/90">
@@ -88,10 +82,7 @@ const VotingScreen = ({
                     style={{ backgroundColor: "#3A1C26", borderColor: "#EF4444" }}
                 >
                     <div className="flex items-start gap-3">
-                        <div
-                            className="h-8 w-8 rounded-full"
-                            style={{ backgroundColor: "#EF4444" }}
-                        />
+                        <img src="/src/assets/eye.svg" alt="Player" className="h-8 w-8" style={{ filter: "brightness(0) saturate(100%) invert(47%) sepia(96%) saturate(2534%) hue-rotate(198deg) brightness(102%) contrast(101%)", }} />
                         <div>
                             <div className="font-semibold">4. Reveal Phase</div>
                             <ul className="mt-1 list-disc pl-5 text-sm text-white/90">
